@@ -56,6 +56,10 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GoblinXNA, Version=3.6.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\GoblinXNAv3.5\bin\GoblinXNA.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
       <Private>False</Private>
       <SpecificVersion>True</SpecificVersion>
@@ -88,8 +92,19 @@
     <Compile Include="Game1.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="alvar140.dll" />
+    <Content Include="alvarplatform140.dll" />
+    <Content Include="ALVARWrapper.dll" />
+    <Content Include="cv100.dll" />
+    <Content Include="cvaux100.dll" />
+    <Content Include="cvcam100.dll" />
+    <Content Include="cxcore100.dll" />
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="highgui100.dll" />
+    <Content Include="Newton.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content\Content.contentproj">
