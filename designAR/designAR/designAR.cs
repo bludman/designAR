@@ -36,7 +36,7 @@ namespace designAR
         protected SpriteBatch spriteBatch;
         private Wand wand;
         //protected Room room;
-        //protected Catalog catalog;
+         Catalog catalog;
 
         protected bool useStaticImage;
 
@@ -77,7 +77,7 @@ namespace designAR
         {
             wand = new Wand();
             //room = new Room();
-            //catalog = new Catalog();
+            catalog = new Catalog(scene);
         }
 
         private void ConfigureState()
