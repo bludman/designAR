@@ -45,13 +45,19 @@ namespace designAR
             {
 
             }
+            else if (button == MouseInput.RightButton)
+            {
+
+            }
         }
 
         private void KeyPressHandler(Keys keys, KeyModifier modifier)
         {
             // Detect key press "a"
             if (keys == Keys.A)
-                ; //do something
+            {
+
+            }
         }
     }
 }
