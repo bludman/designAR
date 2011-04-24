@@ -28,13 +28,18 @@ namespace designAR
     class Wand
     {
         const int IDLE_STATE = 0, PLACING_STATE = 1, MANIPULATING_STATE = 2;
-        int state = 0;
+        //int state = 0;
         SpriteBatch spriteBatch;
-        Texture2D crosshairIdle;
+        //Texture2D crosshairIdle;
+        GraphicsDevice graphicsDevice;
+        Scene scene;
+        int counter = 0;
 
-        public Wand(GraphicsDevice gDevice)
+        public Wand(Scene theScene, GraphicsDevice gDevice)
         {
-            spriteBatch = new SpriteBatch(gDevice);
+            scene = theScene;
+            graphicsDevice = gDevice;
+            spriteBatch = new SpriteBatch(graphicsDevice);
 
             // Add a mouse click callback function to perform ray picking when mouse is clicked
             MouseInput.Instance.MouseClickEvent += new HandleMouseClick(MouseClickHandler);
@@ -45,7 +50,39 @@ namespace designAR
 
         private void Select()
         {
+            Console.WriteLine("HELLO PUTA" + ++counter);
+            // 0 means on the near clipping plane, and 1 means on the far clipping plane
+            Vector3 nearSource = new Vector3(graphicsDevice.DisplayMode.Width/2.0f, graphicsDevice.DisplayMode.Height/2.0f, 0);
+            Vector3 farSource = new Vector3(graphicsDevice.DisplayMode.Width / 2.0f, graphicsDevice.DisplayMode.Height / 2.0f, 1);
 
+            // Now convert the near and far source to actual near and far 3D points based on our eye location
+            // and view frustum
+            Vector3 nearPoint = graphicsDevice.Viewport.Unproject(nearSource,
+                State.ProjectionMatrix, State.ViewMatrix, Matrix.Identity);
+            Vector3 farPoint = graphicsDevice.Viewport.Unproject(farSource,
+                State.ProjectionMatrix, State.ViewMatrix, Matrix.Identity);
+
+            // Have the physics engine intersect the pick ray defined by the nearPoint and farPoint with
+            // the physics objects in the scene (which we have set up to approximate the model geometry).
+            List<PickedObject> pickedObjects = ((NewtonPhysics)scene.PhysicsEngine).PickRayCast(
+                nearPoint, farPoint);
+
+            // If one or more objects intersect with our ray vector
+            if (pickedObjects.Count > 0)
+            {
+                // Since PickedObject can be compared (which means it implements IComparable), we can sort it in 
+                // the order of closest intersected object to farthest intersected object
+                pickedObjects.Sort();
+
+                // We only care about the closest picked object for now, so we'll simply display the name 
+                // of the closest picked object whose container is a geometry node
+                //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
+                Console.WriteLine("HELLO BITCHES" + ++counter);
+            }
+            else
+            {
+
+            }
         }
 
         private void Place()
