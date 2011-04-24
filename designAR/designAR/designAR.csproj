@@ -56,6 +56,10 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DShowNET, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\DShowNET.dll</HintPath>
+    </Reference>
     <Reference Include="GoblinXNA, Version=3.6.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\GoblinXNA.dll</HintPath>
@@ -96,15 +100,25 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="alvar140.dll" />
+    <Content Include="alvar150.dll" />
     <Content Include="alvarplatform140.dll" />
-    <Content Include="ALVARWrapper.dll" />
+    <Content Include="ALVARWrapper.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="cv100.dll" />
     <Content Include="cvaux100.dll" />
     <Content Include="cvcam100.dll" />
     <Content Include="cxcore100.dll" />
+    <Content Include="cxts001.dll" />
+    <Content Include="DirectX.Capture.dll" />
+    <Content Include="DShowNET.dll" />
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="GoblinXNA.dll" />
     <Content Include="highgui100.dll" />
+    <Content Include="IEShims.dll" />
+    <Content Include="libguide40.dll" />
+    <Content Include="ml100.dll" />
     <Content Include="Newton.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
