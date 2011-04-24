@@ -28,11 +28,15 @@ namespace designAR
     class Wand
     {
         const int IDLE_STATE = 0, PLACING_STATE = 1, MANIPULATING_STATE = 2;
+        int state = 0;
 
         public Wand()
         {
             // Add a mouse click callback function to perform ray picking when mouse is clicked
             MouseInput.Instance.MouseClickEvent += new HandleMouseClick(MouseClickHandler);
+
+            // Add a keyboard press handler for user input
+            KeyboardInput.Instance.KeyPressEvent += new HandleKeyPress(KeyPressHandler);
         }
 
         private void MouseClickHandler(int button, Point mouseLocation)
@@ -41,6 +45,13 @@ namespace designAR
             {
 
             }
+        }
+
+        private void KeyPressHandler(Keys keys, KeyModifier modifier)
+        {
+            // Detect key press "a"
+            if (keys == Keys.A)
+                ; //do something
         }
     }
 }

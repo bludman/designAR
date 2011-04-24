@@ -32,6 +32,7 @@ namespace designAR
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Wand wand;
 
         public designAR()
         {
@@ -47,7 +48,7 @@ namespace designAR
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            wand = new Wand();
 
             base.Initialize();
         }
