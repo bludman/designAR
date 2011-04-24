@@ -48,6 +48,9 @@ namespace designAR
             trans.AddChild(geo);
 
             geo.Model = model;
+            geo.Physics.Shape = GoblinXNA.Physics.ShapeType.TriangleMesh;
+            geo.Physics.Pickable = true;
+            geo.AddToPhysicsEngine = true;
             trans.Rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(90), 0, MathHelper.ToRadians(90));
 
         }
