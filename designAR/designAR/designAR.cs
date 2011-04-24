@@ -36,7 +36,7 @@ namespace designAR
         protected SpriteBatch spriteBatch;
         private Wand wand;
         //protected Room room;
-        //protected Catalog catalog;
+         Catalog catalog;
 
         protected bool useStaticImage;
 
@@ -75,9 +75,9 @@ namespace designAR
 
         private void CreateObjects()
         {
-            wand = new Wand();
-            //room = new Room(scene.RootNode);
-            //catalog = new Catalog(scene.RootNode);
+            wand = new Wand(graphics.GraphicsDevice);
+            //room = new Room();
+            catalog = new Catalog(scene);
         }
 
         private void ConfigureState()
@@ -190,7 +190,7 @@ namespace designAR
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            wand.Draw();
 
             base.Draw(gameTime);
         }

@@ -153,6 +153,14 @@ namespace designAR
             if(parentNode!=null)
                 parentNode.AddChild(trans);
         }
+        public void UnbindFrom(BranchNode parentNode)
+        {
+            if (trans != null && trans.Parent != null)
+                ((BranchNode)trans.Parent).RemoveChild(trans);
+
+            if (parentNode != null)
+                parentNode.RemoveChild(trans);
+        }
 
         public void MoveTo(Vector3 position)
         {
