@@ -68,13 +68,9 @@ namespace designAR
             // Use the newton physics engine to perform collision detection
             scene.PhysicsEngine = new NewtonPhysics();
             
-            
             ConfigureState();
             SetupMarkerTracking();
-            
             CreateObjects();
-
-
         }
 
         private void CreateObjects()
