@@ -32,21 +32,19 @@ namespace designAR
         protected TransformNode trans;
         protected bool selected;
         protected Vector3 restrictedDimension;
-        protected int instance;
+        protected static int instance = 0;
+        protected string name;
+        protected int instanceNumber;
 
       
-
-        public Item(BranchNode parentNode)
+        public Item(IModel model,string label)
         {
-            Build(parentNode);
-        }
-
-        public Item(IModel model)
-        {
-            instance = 0;
+            name = label;
+            instanceNumber = instance;
             restrictedDimension = new Vector3(1);
-            geo = new GeometryNode();
-            trans = new TransformNode();
+            geo = new GeometryNode(label+instance);
+            trans = new TransformNode(label+"Trans"+instance);
+            instance++;
             trans.AddChild(geo);
 
             geo.Model = model;
@@ -54,57 +52,16 @@ namespace designAR
 
         }
 
-        public Item(IModel model, Material material) : this(model)
+        public Item(IModel model, string label, Material material) : this(model,label)
         {
             geo.Material = material;
             ((Model)geo.Model).UseInternalMaterials = true;
         }
 
 
-        public Item(Item other) : this(other.geo.Model)
+        public Item(Item other) : this(other.geo.Model, other.name)
         {
             this.Scale = new Vector3(other.Scale.X, other.Scale.Y, other.Scale.Z);
-            this.instance = other.instance + 1;
-        }
-
-        private void Build(BranchNode parentNode)
-        {
-            restrictedDimension = new Vector3(1);
-            geo = new GeometryNode("Box");
-            geo.Model = new Box(10,50,5);
-            
-            // Add this box model to the physics engine for collision detection
-            geo.AddToPhysicsEngine = true;
-            geo.Physics.Shape = ShapeType.Box;
-            // Make this box model cast and receive shadows
-            geo.Model.CastShadows = true;
-            geo.Model.ReceiveShadows = true;
-            geo.Model.ShowBoundingBox = true;
-
-            // Create a material to apply to the box model
-            Material mat = new Material();
-            mat.Diffuse = Color.Red.ToVector4();
-            mat.Specular = Color.White.ToVector4();
-            mat.SpecularPower = 10;
-
-            geo.Material = mat;
-
-            // Add this box model node to the ground marker node
-
-            trans = new TransformNode(new Vector3(0, 10, 0));
-            trans.AddChild(geo);
-            BindTo(parentNode);//parentNode.AddChild(trans);
-            createSelectionNodes();
-
-
-        }
-
-        private void createSelectionNodes()
-        {
-            SwitchNode selectionNode = new SwitchNode();
-            GeometryNode selectionIndicator = new GeometryNode("Box");
-            selectionIndicator.Model = new Box(20, 55, 0.5f);
-
         }
 
 

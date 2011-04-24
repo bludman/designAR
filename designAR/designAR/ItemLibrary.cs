@@ -61,7 +61,8 @@ namespace designAR
                 defaultMaterial.Diffuse = new Vector4(0, 0.5f, 0, 1);
                 defaultMaterial.Specular = Color.White.ToVector4();
                 defaultMaterial.SpecularPower = 10;
-                Item item = new Item(m, defaultMaterial);
+                //Item item = new Item(m, defaultMaterial);
+                Item item = new Item(m, tokens[LABEL], defaultMaterial);
                 item.Scale = new Vector3(float.Parse(tokens[SCALE]));
                 items.Add(item);
                 itemMap.Add(tokens[LABEL], item);
@@ -78,6 +79,15 @@ namespace designAR
             return new Item(items[id]);
         }
 
+        public Item getItem(string label)
+        {
+            return new Item(itemMap[label]);
+        }
+
+        /// <summary>
+        /// Returns a copy of all the items in this library
+        /// </summary>
+        /// <returns></returns>
         public List<Item> getAllItems()
         {
             List<Item> copy = new List<Item>();
