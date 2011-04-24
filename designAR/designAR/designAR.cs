@@ -10,13 +10,18 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using GoblinXNA;
-using GoblinXNA.SceneGraph;
 using GoblinXNA.Graphics;
+using GoblinXNA.SceneGraph;
+using Model = GoblinXNA.Graphics.Model;
 using GoblinXNA.Graphics.Geometry;
+using GoblinXNA.Device.Capture;
 using GoblinXNA.Device.Generic;
+using GoblinXNA.Device.Vision;
+using GoblinXNA.Device.Vision.Marker;
+using GoblinXNA.Device.Util;
 using GoblinXNA.Physics;
 using GoblinXNA.Physics.Newton1;
-using GoblinXNA.UI.UI2D;
+using GoblinXNA.Helpers;
 
 namespace designAR
 {
@@ -27,6 +32,7 @@ namespace designAR
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Wand wand;
 
         public designAR()
         {
@@ -42,7 +48,7 @@ namespace designAR
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            wand = new Wand();
 
             base.Initialize();
         }
