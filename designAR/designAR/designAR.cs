@@ -22,6 +22,7 @@ using GoblinXNA.Device.Util;
 using GoblinXNA.Physics;
 using GoblinXNA.Physics.Newton1;
 using GoblinXNA.Helpers;
+using GoblinXNA.UI;
 
 namespace designAR
 {
@@ -30,9 +31,14 @@ namespace designAR
     /// </summary>
     public class designAR : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        Wand wand;
+        protected Scene scene;
+        protected GraphicsDeviceManager graphics;
+        protected SpriteBatch spriteBatch;
+        private Wand wand;
+        //protected Room room;
+        //protected Catalog catalog;
+
+        protected bool useStaticImage;
 
         public designAR()
         {
@@ -48,9 +54,54 @@ namespace designAR
         /// </summary>
         protected override void Initialize()
         {
-            wand = new Wand();
-
             base.Initialize();
+
+            // Hide the mouse cursor
+            this.IsMouseVisible = false;
+
+            // Initialize the GoblinXNA framework
+            State.InitGoblin(graphics, Content, "");
+
+            // Initialize the scene graph
+            scene = new Scene(this);
+
+            // Use the newton physics engine to perform collision detection
+            scene.PhysicsEngine = new NewtonPhysics();
+            
+            
+            ConfigureState();
+            SetupMarkerTracking();
+            
+            CreateObjects();
+
+
+        }
+
+        private void CreateObjects()
+        {
+            wand = new Wand();
+            //room = new Room();
+            //catalog = new Catalog();
+        }
+
+        private void ConfigureState()
+        {
+            State.LineManager.LineShader = new GoblinXNA.Shaders.Line3DShader("LineRendering.fx");
+            State.LineManager.ShaderTechnique = "LineRendering3D";
+            State.ShowFPS = true;
+            State.ShowNotifications = true;
+
+            scene.PreferPerPixelLighting = false;
+            scene.EnableShadowMapping = false;
+
+            Notifier.Placement = Notifier.NotifierPlacement.TopRight;
+            Notifier.Color = Color.Red;
+            Notifier.CustomStartLocation = new Vector2(1300, 350);
+            Notifier.CustomAppearDirection = new Vector2(0, 20);
+            Notifier.FadeOutTime = 2000;
+
+
+            useStaticImage = false;
         }
 
         /// <summary>
@@ -63,6 +114,51 @@ namespace designAR
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+        }
+
+
+        private void SetupMarkerTracking()
+        {
+            IVideoCapture captureDevice = null;
+
+            if (useStaticImage)
+            {
+                captureDevice = new NullCapture();
+                captureDevice.InitVideoCapture(0, FrameRate._30Hz, Resolution._800x600,
+                    ImageFormat.R8G8B8_24, false);
+                ((NullCapture)captureDevice).StaticImageFile = "MarkerImage";
+            }
+            else
+            {
+                // Create our video capture device that uses DirectShow library. Note that 
+                // the combinations of resolution and frame rate that are allowed depend on 
+                // the particular video capture device. Thus, setting incorrect resolution 
+                // and frame rate values may cause exceptions or simply be ignored, depending 
+                // on the device driver.  The values set here will work for a Microsoft VX 6000, 
+                // and many other webcams.
+                captureDevice = new DirectShowCapture2();
+                captureDevice.InitVideoCapture(0, FrameRate._30Hz, Resolution._640x480,
+                    ImageFormat.R8G8B8_24, false);
+            }
+
+            // Add this video capture device to the scene so that it can be used for
+            // the marker tracker
+            scene.AddVideoCaptureDevice(captureDevice);
+
+            IMarkerTracker tracker = null;
+
+
+            // Create an optical marker tracker that uses ALVAR library
+            tracker = new ALVARMarkerTracker();
+            ((ALVARMarkerTracker)tracker).MaxMarkerError = 0.02f;
+            tracker.InitTracker(captureDevice.Width, captureDevice.Height, "calib.xml", 9.0);
+
+            // Set the marker tracker to use for our scene
+            scene.MarkerTracker = tracker;
+
+            // Display the camera image in the background. Note that this parameter should
+            // be set after adding at least one video capture device to the Scene class.
+            scene.ShowCameraImage = true;
         }
 
         /// <summary>
