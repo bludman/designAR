@@ -40,6 +40,7 @@ namespace designAR
         int cur_end = 9;
         float cur_angle = 0;
         ItemLibrary library;
+        List<Item> item_list;
         Scene my_scene;
         public Catalog(Scene s)
         {
@@ -50,10 +51,11 @@ namespace designAR
             my_scene.RootNode.AddChild(marker);
             my_scene.RootNode.AddChild(changeMarker);
             library = new ItemLibrary("models.txt");
+            item_list = library.getAllItems();
           //  this.objects = l;
             int grid_x = 0;
             int grid_y = 0;
-            for (int i = cur_start; i < cur_end && i < library.getAllItems().Count; i++)
+            for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
             {
                 grid_x += 10;
 
@@ -62,18 +64,19 @@ namespace designAR
                     grid_x = 0;
                     grid_y -= 10;
                 }
-                library.getAllItems()[i].BindTo(marker);
+                item_list[i].BindTo(marker);
                // objects[i].Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)Math.PI / 2);
-                library.getAllItems()[i].MoveTo( new Vector3(grid_x, grid_y, 0));
-
+               item_list[i].MoveTo( new Vector3(grid_x, grid_y, 0));
+             
             }
+            
 
         }
         public void display(GameTime gameTime)
         {
             if (marker.MarkerFound)
             {
-                for (int i = cur_start; i < cur_end && i < library.getAllItems().Count; i++)
+                for (int i = cur_start; i < cur_end && i <item_list.Count; i++)
                 {
                    // objects[i].Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)Math.PI / 2) * Quaternion.CreateFromAxisAngle(Vector3.UnitY, cur_angle);
 
@@ -85,15 +88,15 @@ namespace designAR
             if (changeMarker.MarkerFound && (gameTime.TotalGameTime.Seconds - changeTime) > 2)
             {
 
-                for (int i = cur_start; i < cur_end && i < library.getAllItems().Count; i++)
+                for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
                 {
 
-                    library.getAllItems()[i].UnbindFrom(marker);
+                    item_list[i].UnbindFrom(marker);
 
 
                 }
                 changeTime = gameTime.TotalGameTime.Seconds;
-                if (cur_end > library.getAllItems().Count)
+                if (cur_end > item_list.Count)
                 {
                     cur_end = num_displayed;
                     cur_start = 0;
@@ -105,7 +108,7 @@ namespace designAR
                 }
                 int grid_x = 0;
                 int grid_y = 0;
-                for (int i = cur_start; i < cur_end && i < library.getAllItems().Count; i++)
+                for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
                 {
                     grid_x += 10;
 
@@ -114,11 +117,9 @@ namespace designAR
                         grid_x = 0;
                         grid_y -= 10;
                     }
-                    library.getAllItems()[i].BindTo(marker);
-                    library.getAllItems()[i].MoveTo( new Vector3(grid_x, grid_y, 0));
-                    //objects[i].Translation = new Vector3(0, 0, 0);
-                    //objects[i].Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)Math.PI / 2);
-                   // objects[i].Translation = new Vector3(grid_x, grid_y, 0);
+                    item_list[i].Selected = true;
+                    item_list[i].BindTo(marker);
+                    item_list[i].MoveTo( new Vector3(grid_x, grid_y, 0));  
 
                 }
 
