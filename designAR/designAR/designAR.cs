@@ -73,13 +73,11 @@ namespace designAR
             SetupMarkerTracking();
             
             CreateObjects();
-
-
         }
 
         private void CreateObjects()
         {
-            wand = new Wand();
+            wand = new Wand(graphics.GraphicsDevice);
             //room = new Room();
             //catalog = new Catalog();
         }

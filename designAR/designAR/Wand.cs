@@ -29,9 +29,13 @@ namespace designAR
     {
         const int IDLE_STATE = 0, PLACING_STATE = 1, MANIPULATING_STATE = 2;
         int state = 0;
+        SpriteBatch spriteBatch;
+        Texture2D crosshairIdle;
 
-        public Wand()
+        public Wand(GraphicsDevice gDevice)
         {
+            spriteBatch = new SpriteBatch(gDevice);
+
             // Add a mouse click callback function to perform ray picking when mouse is clicked
             MouseInput.Instance.MouseClickEvent += new HandleMouseClick(MouseClickHandler);
 
