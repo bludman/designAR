@@ -32,6 +32,7 @@ namespace designAR
         protected TransformNode trans;
         protected bool selected;
         protected Vector3 restrictedDimension;
+        protected int instance;
 
       
 
@@ -42,6 +43,7 @@ namespace designAR
 
         public Item(IModel model)
         {
+            instance = 0;
             restrictedDimension = new Vector3(1);
             geo = new GeometryNode();
             trans = new TransformNode();
@@ -62,6 +64,7 @@ namespace designAR
         public Item(Item other) : this(other.geo.Model)
         {
             this.Scale = new Vector3(other.Scale.X, other.Scale.Y, other.Scale.Z);
+            this.instance = other.instance + 1;
         }
 
         private void Build(BranchNode parentNode)
@@ -115,7 +118,7 @@ namespace designAR
         {
 
             get { return selected; }
-            set { selected = value; }
+            set { selected = value; geo.Model.ShowBoundingBox = value; }
         }
 
         

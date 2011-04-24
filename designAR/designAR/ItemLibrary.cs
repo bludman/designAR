@@ -27,18 +27,25 @@ namespace designAR
 {
     class ItemLibrary
     {
-        List<Item> items;
+        protected List<Item> items;
+        protected Dictionary<string, Item> itemMap;
 
         public ItemLibrary(String filename)
         {
             int counter = 0;
             string line;
             items = new List<Item>();
+            itemMap = new Dictionary<string, Item>();
             ModelLoader loader = new ModelLoader();
 
             // Read the file and display it line by line.
             System.IO.StreamReader file =
                new System.IO.StreamReader(filename);
+
+
+            int LABEL = 0;
+            int SCALE = 1;
+            
             while ((line = file.ReadLine()) != null)
             {
                 //Allow comments in config file
@@ -46,8 +53,8 @@ namespace designAR
                     continue;
 
                 string[] tokens=line.Split(',');
-                Console.WriteLine("Loading: "+tokens[0]);
-                Model m = (Model)loader.Load("", tokens[0]);
+                Console.WriteLine("Loading: "+tokens[LABEL]);
+                Model m = (Model)loader.Load("", tokens[LABEL]);
 
                 //IModel m = new Cylinder(5, 5, 10, 10); //new Sphere(10, 20, 30);
                 Material defaultMaterial = new Material();
@@ -55,8 +62,9 @@ namespace designAR
                 defaultMaterial.Specular = Color.White.ToVector4();
                 defaultMaterial.SpecularPower = 10;
                 Item item = new Item(m, defaultMaterial);
-                item.Scale = new Vector3(float.Parse(tokens[1]));
+                item.Scale = new Vector3(float.Parse(tokens[SCALE]));
                 items.Add(item);
+                itemMap.Add(tokens[LABEL], item);
 
 
                 counter++;
