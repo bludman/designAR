@@ -39,15 +39,30 @@ namespace designAR
             KeyboardInput.Instance.KeyPressEvent += new HandleKeyPress(KeyPressHandler);
         }
 
+        private void Select()
+        {
+
+        }
+
+        private void Place()
+        {
+
+        }
+
+        public void Draw()
+        {
+
+        }
+
         private void MouseClickHandler(int button, Point mouseLocation)
         {
             if (button == MouseInput.LeftButton)
             {
-
+                Select();
             }
             else if (button == MouseInput.RightButton)
             {
-
+                Place();
             }
         }
 

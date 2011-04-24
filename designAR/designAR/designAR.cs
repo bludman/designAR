@@ -98,7 +98,7 @@ namespace designAR
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            wand.Draw();
 
             base.Draw(gameTime);
         }
