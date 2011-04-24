@@ -76,8 +76,8 @@ namespace designAR
         private void CreateObjects()
         {
             wand = new Wand();
-            //room = new Room();
-            //catalog = new Catalog();
+            //room = new Room(scene.RootNode);
+            //catalog = new Catalog(scene.RootNode);
         }
 
         private void ConfigureState()
