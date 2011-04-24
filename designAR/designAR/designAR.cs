@@ -75,7 +75,7 @@ namespace designAR
 
         private void CreateObjects()
         {
-            wand = new Wand();
+            wand = new Wand(graphics.GraphicsDevice);
             //room = new Room();
             catalog = new Catalog(scene);
         }
@@ -190,7 +190,7 @@ namespace designAR
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            wand.Draw();
 
             base.Draw(gameTime);
         }
