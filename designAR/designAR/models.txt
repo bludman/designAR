@@ -1,6 +1,6 @@
 #modleName,scale,yaw,pitch,roll
 #
-table,55,90,0,90
+#table,55,90,0,90	#bounding box is f**ed up
 chair05,0.3,90,0,90
 Coffeetb,0.06,90,0,90
 consoleFBX,0.03,90,0,90
