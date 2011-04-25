@@ -33,9 +33,8 @@ namespace designAR
         protected bool selected;
         protected Vector3 restrictedDimension;
         protected static int instance = 0;
-        protected string name;
         protected int instanceNumber;
-
+        protected string name;
       
         public Item(IModel model,string label)
         {
@@ -73,7 +72,11 @@ namespace designAR
             get { return trans.Scale; }
             set { trans.Scale = value; }
         }
-
+        public virtual string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
          public virtual bool Selected
         {
 

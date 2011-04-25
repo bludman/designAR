@@ -42,6 +42,7 @@ namespace designAR
         ItemLibrary library;
         List<Item> item_list;
         Scene my_scene;
+        Dictionary<String, Item> names2items;
         public Catalog(Scene s)
         {
             this.my_scene = s;
@@ -51,10 +52,15 @@ namespace designAR
             my_scene.RootNode.AddChild(marker);
             my_scene.RootNode.AddChild(changeMarker);
             library = new ItemLibrary("models.txt");
+            names2items = new Dictionary<string, Item>();
             item_list = library.getAllItems();
           //  this.objects = l;
             int grid_x = 0;
             int grid_y = 0;
+            foreach (Item i in item_list)
+            {
+                names2items.Add(i.Name, i);
+            }
             for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
             {
                 grid_x += 10;
@@ -71,6 +77,12 @@ namespace designAR
             }
             
 
+        }
+        public Item selectItem(String s)
+        {
+            Item i;
+            names2items.TryGetValue(s, out i);
+            return i;
         }
         public void display(GameTime gameTime)
         {
