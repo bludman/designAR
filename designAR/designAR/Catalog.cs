@@ -32,7 +32,7 @@ namespace designAR
     class Catalog
     {
 
-        MarkerNode marker, changeMarker;
+        public MarkerNode marker, changeMarker;
        // List<TransformNode> objects;
         int changeTime;
         int num_displayed = 9;
@@ -41,6 +41,7 @@ namespace designAR
         float cur_angle = 0;
         ItemLibrary library;
         Scene my_scene;
+        
         public Catalog(Scene s)
         {
             this.my_scene = s;
@@ -67,6 +68,32 @@ namespace designAR
                 library.getAllItems()[i].MoveTo( new Vector3(grid_x, grid_y, 0));
 
             }
+
+            // Create a geometry node with a model of box
+            GeometryNode boxNode = new GeometryNode("Box");
+            boxNode.Model = new Box(Vector3.One * 3);
+
+            Material boxMat = new Material();
+            boxMat.Diffuse = Color.Red.ToVector4();
+            boxMat.Specular = Color.White.ToVector4();
+            boxMat.SpecularPower = 5;
+
+            boxNode.Material = boxMat;
+
+            TransformNode boxTransNode = new TransformNode();
+            boxTransNode.Translation = new Vector3(-5, 0, -6);
+
+            // Define the most suitable shape type for this model
+            // which is Box in this case so that the physics engine
+            // will understand how to take care of the collision
+            boxNode.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
+            // Set this box model to be pickable
+            boxNode.Physics.Pickable = true;
+            // Add this box model to the physics engine
+            boxNode.AddToPhysicsEngine = true;
+
+            marker.AddChild(boxTransNode);
+            boxTransNode.AddChild(boxNode);
 
         }
         public void display(GameTime gameTime)

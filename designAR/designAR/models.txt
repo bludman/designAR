@@ -1,12 +1,12 @@
 #modleName,scale,yaw,pitch,roll
 #
-#table,15,90,0,90
-chair05,1,90,0,90
-#Coffeetb,0.2,90,0,90
-#consoleFBX,0.1,90,0,90
-#Table2,1,90,0,90,true
-#chair,1,90,0,90	#doesn't work right
-#cabinet,1,90,0,90,true
-#Furniture14,0.1,90,0,90
-#ka_design_m6_bed_fbx_upY,0.1,90,0,90
-#komodsalda8237FBX,0.1,90,0,90
+table,55,90,0,90
+chair05,0.3,90,0,90
+Coffeetb,0.06,90,0,90
+consoleFBX,0.03,90,0,90
+Table2,0.33,90,0,90,true
+#chair,0.33,90,0,90	#doesn't work right
+cabinet,0.33,90,0,90,true
+Furniture14,0.033,90,0,90
+#ka_design_m6_bed_fbx_upY,0.1,90,0,90	#not cool
+#komodsalda8237FBX,0.1,90,0,90	#not cool

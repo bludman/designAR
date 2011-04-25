@@ -27,18 +27,19 @@ namespace designAR
 {
     class Wand
     {
-        const int IDLE_STATE = 0, PLACING_STATE = 1, MANIPULATING_STATE = 2;
-        //int state = 0;
-        SpriteBatch spriteBatch;
-        //Texture2D crosshairIdle;
-        GraphicsDevice graphicsDevice;
-        Scene scene;
-        int counter = 0;
+        private const int IDLE_STATE = 0, PLACING_STATE = 1, MANIPULATING_STATE = 2;
+        //private int state = 0;
+        private SpriteBatch spriteBatch;
+        //private Texture2D crosshairIdle;
+        private GraphicsDevice graphicsDevice;
+        private Scene scene;
+        private Catalog catalog;
 
-        public Wand(Scene theScene, GraphicsDevice gDevice)
+        public Wand(Scene theScene, GraphicsDevice gDevice, Catalog cat)
         {
             scene = theScene;
             graphicsDevice = gDevice;
+            catalog = cat;
             spriteBatch = new SpriteBatch(graphicsDevice);
 
             // Add a mouse click callback function to perform ray picking when mouse is clicked
@@ -50,17 +51,18 @@ namespace designAR
 
         private void Select()
         {
-            Console.WriteLine("HELLO PUTA" + ++counter);
             // 0 means on the near clipping plane, and 1 means on the far clipping plane
-            Vector3 nearSource = new Vector3(graphicsDevice.DisplayMode.Width/2.0f, graphicsDevice.DisplayMode.Height/2.0f, 0);
-            Vector3 farSource = new Vector3(graphicsDevice.DisplayMode.Width / 2.0f, graphicsDevice.DisplayMode.Height / 2.0f, 1);
+            //Vector3 nearSource = new Vector3(mouseLocation.X, mouseLocation.Y, 0);
+            //Vector3 farSource = new Vector3(mouseLocation.X, mouseLocation.Y, 1);
+            Vector3 nearSource = new Vector3(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f, 0);
+            Vector3 farSource = new Vector3(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f, 1);
 
             // Now convert the near and far source to actual near and far 3D points based on our eye location
             // and view frustum
             Vector3 nearPoint = graphicsDevice.Viewport.Unproject(nearSource,
-                State.ProjectionMatrix, State.ViewMatrix, Matrix.Identity);
+                State.ProjectionMatrix, State.ViewMatrix, catalog.marker.WorldTransformation);
             Vector3 farPoint = graphicsDevice.Viewport.Unproject(farSource,
-                State.ProjectionMatrix, State.ViewMatrix, Matrix.Identity);
+                State.ProjectionMatrix, State.ViewMatrix, catalog.marker.WorldTransformation);
 
             // Have the physics engine intersect the pick ray defined by the nearPoint and farPoint with
             // the physics objects in the scene (which we have set up to approximate the model geometry).
@@ -77,11 +79,11 @@ namespace designAR
                 // We only care about the closest picked object for now, so we'll simply display the name 
                 // of the closest picked object whose container is a geometry node
                 //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
-                Console.WriteLine("HELLO BITCHES" + ++counter);
+                Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
             }
             else
             {
-
+                Console.WriteLine("NOTHING HERE BITCHES");
             }
         }
 
