@@ -41,9 +41,9 @@ namespace designAR
             name = label;
             instanceNumber = instance;
             restrictedDimension = new Vector3(1);
-            geo = new GeometryNode(label+instance);
+            geo = new GeometryNode(label);
             trans = new TransformNode(label+"Trans"+instance);
-            instance++;
+            //instance++;
             trans.AddChild(geo);
 
             geo.Model = model;
