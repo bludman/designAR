@@ -80,7 +80,8 @@ namespace designAR
         {
             Item i;
             names2items.TryGetValue(s, out i);
-            return i;
+            i.Selected = true;
+            return new Item(i);
         }
         public void display(GameTime gameTime)
         {
