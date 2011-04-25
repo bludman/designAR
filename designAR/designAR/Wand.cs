@@ -34,6 +34,7 @@ namespace designAR
         private GraphicsDevice graphicsDevice;
         private Scene scene;
         private Catalog catalog;
+        private Item itemToPlace;
 
         public Wand(Scene theScene, GraphicsDevice gDevice, Catalog cat)
         {
@@ -80,6 +81,8 @@ namespace designAR
                 // of the closest picked object whose container is a geometry node
                 //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
                 Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                // Getting an new instance of the item
+                itemToPlace = catalog.selectItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
             }
             else
             {

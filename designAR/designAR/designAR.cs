@@ -178,8 +178,9 @@ namespace designAR
                 this.Exit();
 
             // TODO: Add your update logic here
-
+           
             base.Update(gameTime);
+           
         }
 
         /// <summary>
@@ -191,7 +192,7 @@ namespace designAR
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             wand.Draw();
-
+            catalog.display(gameTime);
             base.Draw(gameTime);
         }
     }

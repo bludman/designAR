@@ -33,22 +33,21 @@ namespace designAR
         protected bool selected;
         protected Vector3 restrictedDimension;
         protected static int instance = 0;
-        protected string name;
         protected int instanceNumber;
-
+        protected string name;
       
         public Item(IModel model,string label)
         {
             name = label;
             instanceNumber = instance;
             restrictedDimension = new Vector3(1);
-            geo = new GeometryNode(label+instance);
+            geo = new GeometryNode(label);
             trans = new TransformNode(label+"Trans"+instance);
-            instance++;
+            //instance++;
             trans.AddChild(geo);
 
             geo.Model = model;
-            geo.Physics.Shape = GoblinXNA.Physics.ShapeType.TriangleMesh;
+            geo.Physics.Shape = GoblinXNA.Physics.ShapeType.ConvexHull;
             geo.Physics.Pickable = true;
             geo.AddToPhysicsEngine = true;
             trans.Rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(90), 0, MathHelper.ToRadians(90));
@@ -73,7 +72,11 @@ namespace designAR
             get { return trans.Scale; }
             set { trans.Scale = value; }
         }
-
+        public virtual string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
          public virtual bool Selected
         {
 

@@ -40,8 +40,9 @@ namespace designAR
         int cur_end = 9;
         float cur_angle = 0;
         ItemLibrary library;
+        List<Item> item_list;
         Scene my_scene;
-        
+        Dictionary<String, Item> names2items;
         public Catalog(Scene s)
         {
             this.my_scene = s;
@@ -51,10 +52,16 @@ namespace designAR
             my_scene.RootNode.AddChild(marker);
             my_scene.RootNode.AddChild(changeMarker);
             library = new ItemLibrary("models.txt");
+            names2items = new Dictionary<string, Item>();
+            item_list = library.getAllItems();
           //  this.objects = l;
             int grid_x = 0;
             int grid_y = 0;
-            for (int i = cur_start; i < cur_end && i < library.getAllItems().Count; i++)
+            foreach (Item i in item_list)
+            {
+                names2items.Add(i.Name, i);
+            }
+            for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
             {
                 grid_x += 10;
 
@@ -63,44 +70,23 @@ namespace designAR
                     grid_x = 0;
                     grid_y -= 10;
                 }
-                library.getAllItems()[i].BindTo(marker);
+                item_list[i].BindTo(marker);
                // objects[i].Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)Math.PI / 2);
-                library.getAllItems()[i].MoveTo( new Vector3(grid_x, grid_y, 0));
-
+               item_list[i].MoveTo( new Vector3(grid_x, grid_y, 0));
+             
             }
-
-            // Create a geometry node with a model of box
-            GeometryNode boxNode = new GeometryNode("Box");
-            boxNode.Model = new Box(Vector3.One * 3);
-
-            Material boxMat = new Material();
-            boxMat.Diffuse = Color.Red.ToVector4();
-            boxMat.Specular = Color.White.ToVector4();
-            boxMat.SpecularPower = 5;
-
-            boxNode.Material = boxMat;
-
-            TransformNode boxTransNode = new TransformNode();
-            boxTransNode.Translation = new Vector3(-5, 0, -6);
-
-            // Define the most suitable shape type for this model
-            // which is Box in this case so that the physics engine
-            // will understand how to take care of the collision
-            boxNode.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
-            // Set this box model to be pickable
-            boxNode.Physics.Pickable = true;
-            // Add this box model to the physics engine
-            boxNode.AddToPhysicsEngine = true;
-
-            marker.AddChild(boxTransNode);
-            boxTransNode.AddChild(boxNode);
-
+        }
+        public Item selectItem(String s)
+        {
+            Item i;
+            names2items.TryGetValue(s, out i);
+            return i;
         }
         public void display(GameTime gameTime)
         {
             if (marker.MarkerFound)
             {
-                for (int i = cur_start; i < cur_end && i < library.getAllItems().Count; i++)
+                for (int i = cur_start; i < cur_end && i <item_list.Count; i++)
                 {
                    // objects[i].Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)Math.PI / 2) * Quaternion.CreateFromAxisAngle(Vector3.UnitY, cur_angle);
 
@@ -112,15 +98,15 @@ namespace designAR
             if (changeMarker.MarkerFound && (gameTime.TotalGameTime.Seconds - changeTime) > 2)
             {
 
-                for (int i = cur_start; i < cur_end && i < library.getAllItems().Count; i++)
+                for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
                 {
 
-                    library.getAllItems()[i].UnbindFrom(marker);
+                    item_list[i].UnbindFrom(marker);
 
 
                 }
                 changeTime = gameTime.TotalGameTime.Seconds;
-                if (cur_end > library.getAllItems().Count)
+                if (cur_end > item_list.Count)
                 {
                     cur_end = num_displayed;
                     cur_start = 0;
@@ -132,7 +118,7 @@ namespace designAR
                 }
                 int grid_x = 0;
                 int grid_y = 0;
-                for (int i = cur_start; i < cur_end && i < library.getAllItems().Count; i++)
+                for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
                 {
                     grid_x += 10;
 
@@ -141,11 +127,9 @@ namespace designAR
                         grid_x = 0;
                         grid_y -= 10;
                     }
-                    library.getAllItems()[i].BindTo(marker);
-                    library.getAllItems()[i].MoveTo( new Vector3(grid_x, grid_y, 0));
-                    //objects[i].Translation = new Vector3(0, 0, 0);
-                    //objects[i].Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)Math.PI / 2);
-                   // objects[i].Translation = new Vector3(grid_x, grid_y, 0);
+                    item_list[i].Selected = true;
+                    item_list[i].BindTo(marker);
+                    item_list[i].MoveTo( new Vector3(grid_x, grid_y, 0));  
 
                 }
 
