@@ -36,6 +36,10 @@ namespace designAR
         protected int instanceNumber;
         protected string name;
       
+        protected static Item selectedItem;
+
+
+
         public Item(IModel model,string label)
         {
             name = label;
@@ -81,7 +85,22 @@ namespace designAR
         {
 
             get { return selected; }
-            set { selected = value; geo.Model.ShowBoundingBox = value; }
+            set { 
+                selected = value; 
+                geo.Model.ShowBoundingBox = value;
+                if (value)
+                {
+                    if (selectedItem != null)
+                        selectedItem.Selected = false;
+
+                    selectedItem = this;
+                }
+                else
+                {
+                    selectedItem = null;
+                }
+
+            }
         }
 
         
