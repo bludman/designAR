@@ -61,9 +61,9 @@ namespace designAR
             // Now convert the near and far source to actual near and far 3D points based on our eye location
             // and view frustum
             Vector3 nearPoint = graphicsDevice.Viewport.Unproject(nearSource,
-                State.ProjectionMatrix, State.ViewMatrix, catalog.marker.WorldTransformation);
+                State.ProjectionMatrix, State.ViewMatrix, catalog.getMarkerTransform());
             Vector3 farPoint = graphicsDevice.Viewport.Unproject(farSource,
-                State.ProjectionMatrix, State.ViewMatrix, catalog.marker.WorldTransformation);
+                State.ProjectionMatrix, State.ViewMatrix, catalog.getMarkerTransform());
 
             // Have the physics engine intersect the pick ray defined by the nearPoint and farPoint with
             // the physics objects in the scene (which we have set up to approximate the model geometry).

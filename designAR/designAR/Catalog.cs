@@ -32,7 +32,7 @@ namespace designAR
     class Catalog
     {
 
-        private MarkerNode marker, changeMarker;
+        private MarkerNode marker, changeMarker, wimMarker;
        // List<TransformNode> objects;
         int changeTime;
         int num_displayed = 9;
@@ -49,8 +49,10 @@ namespace designAR
             
             this.marker = new MarkerNode(my_scene.MarkerTracker, "palette_marker.xml");
             this.changeMarker = new MarkerNode(my_scene.MarkerTracker, "palette_turn_marker.xml");
+            this.wimMarker = new MarkerNode(my_scene.MarkerTracker, "wim_marker.xml");
             my_scene.RootNode.AddChild(marker);
             my_scene.RootNode.AddChild(changeMarker);
+            my_scene.RootNode.AddChild(wimMarker);
             library = new ItemLibrary("models.txt");
             names2items = new Dictionary<string, Item>();
             item_list = library.getAllItems();
@@ -71,8 +73,8 @@ namespace designAR
                     grid_y -= 10;
                 }
                 item_list[i].BindTo(marker);
-               // objects[i].Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)Math.PI / 2);
-               item_list[i].MoveTo( new Vector3(grid_x, grid_y, 0));
+                // objects[i].Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)Math.PI / 2);
+                item_list[i].MoveTo( new Vector3(grid_x, grid_y, 0));
              
             }
         }
@@ -134,6 +136,11 @@ namespace designAR
 
                 }
 
+
+            }
+            else if (wimMarker.MarkerFound)
+            {
+                Console.WriteLine("found wim");
 
             }
         }
