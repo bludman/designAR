@@ -144,10 +144,11 @@ namespace designAR
                 {
                     itemToPlace.BindTo(room);
                     Vector3 direction = farPoint - nearPoint;
-                    direction.Normalize();
+                    //direction.Normalize();
                     Vector3 placement = nearPoint + direction*float.Parse(pickedObjects[0].IntersectParam.ToString());
                     Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
                     Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
+                    //placement.Z = 0f;
                     itemToPlace.MoveTo(placement);
                 }
             }
