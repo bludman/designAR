@@ -32,7 +32,7 @@ namespace designAR
     class Catalog
     {
 
-        public MarkerNode marker, changeMarker;
+        private MarkerNode marker, changeMarker;
        // List<TransformNode> objects;
         int changeTime;
         int num_displayed = 9;
@@ -138,6 +138,11 @@ namespace designAR
             }
         }
 
+
+        public Matrix getMarkerTransform()
+        {
+            return this.marker.WorldTransformation;
+        }
 
     }
 }
