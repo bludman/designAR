@@ -135,8 +135,12 @@ namespace designAR
 
         public void BindTo(BranchNode parentNode)
         {
-            if(trans!= null &&  trans.Parent!=null )
+            if (trans != null && ((BranchNode)trans.Parent) != null)
+            {
                 ((BranchNode)trans.Parent).RemoveChild(trans);
+
+                Console.WriteLine("Contained?" + ((BranchNode)trans.Parent).Children.Contains(trans));
+            }
 
             if(parentNode!=null)
                 parentNode.AddChild(trans);

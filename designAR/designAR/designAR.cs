@@ -79,6 +79,7 @@ namespace designAR
             room = new Room(scene, 60, 60);
             room.Initialize();
             wand = new Wand(scene, graphics.GraphicsDevice, catalog, room);
+            wand.setTexture(Content.Load<Texture2D>("crosshairs/crosshairnormal"));
             //room = new Room();
         }
 
@@ -193,9 +194,11 @@ namespace designAR
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            wand.Draw();
+            
             catalog.display(gameTime);
             base.Draw(gameTime);
+            wand.Draw();
+            
         }
     }
 }

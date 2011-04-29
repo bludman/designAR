@@ -38,6 +38,14 @@ namespace designAR
         private Room room;
         private Item itemToPlace;
 
+        Vector3 nearSource;
+        Vector3 farSource;
+        Vector2 screenCenter;
+        Vector2 cursorPosition;
+
+        protected Texture2D selectSprite;
+        protected Texture2D currentCursor;
+
         public Wand(Scene theScene, GraphicsDevice gDevice, Catalog cat, Room rm)
         {
             scene = theScene;
@@ -47,6 +55,13 @@ namespace designAR
             room = rm;
 
             spriteBatch = new SpriteBatch(graphicsDevice);
+
+
+            screenCenter = new Vector2(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f);
+            //nearSource = new Vector3(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f, 0);
+            nearSource = new Vector3(screenCenter, 0);
+            //farSource = new Vector3(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f, 1);
+            farSource = new Vector3(screenCenter, 1);
 
             // Add a mouse click callback function to perform ray picking when mouse is clicked
             MouseInput.Instance.MouseClickEvent += new HandleMouseClick(MouseClickHandler);
@@ -60,8 +75,6 @@ namespace designAR
             // 0 means on the near clipping plane, and 1 means on the far clipping plane
             //Vector3 nearSource = new Vector3(mouseLocation.X, mouseLocation.Y, 0);
             //Vector3 farSource = new Vector3(mouseLocation.X, mouseLocation.Y, 1);
-            Vector3 nearSource = new Vector3(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f, 0);
-            Vector3 farSource = new Vector3(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f, 1);
 
             // Now convert the near and far source to actual near and far 3D points based on our eye location
             // and view frustum
@@ -99,8 +112,6 @@ namespace designAR
         {
             Console.WriteLine("Placing!");
             Notifier.AddMessage("Placing!");
-            Vector3 nearSource = new Vector3(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f, 0);
-            Vector3 farSource = new Vector3(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f, 1);
 
             // Now convert the near and far source to actual near and far 3D points based on our eye location
             // and view frustum
@@ -130,13 +141,23 @@ namespace designAR
                 Notifier.AddMessage(pickedObjects[0].IntersectParam.ToString() + " " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
 
                 if (itemToPlace != null)
+                {
                     itemToPlace.BindTo(room);
+                    Vector3 direction = farPoint - nearPoint;
+                    direction.Normalize();
+                    Vector3 placement = nearPoint + direction*float.Parse(pickedObjects[0].IntersectParam.ToString());
+                    Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
+                    Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
+                    itemToPlace.MoveTo(placement);
+                }
             }
         }
 
         public void Draw()
         {
-
+            spriteBatch.Begin();
+            spriteBatch.Draw(currentCursor, cursorPosition, Color.White);
+            spriteBatch.End();
         }
 
         private void MouseClickHandler(int button, Point mouseLocation)
@@ -158,6 +179,13 @@ namespace designAR
             {
 
             }
+        }
+
+        internal void setTexture(Texture2D sprite)
+        {
+            this.selectSprite = sprite;
+            currentCursor = selectSprite;
+            cursorPosition = new Vector2(screenCenter.X - currentCursor.Width / 2f, screenCenter.Y - currentCursor.Height / 2f);
         }
     }
 }

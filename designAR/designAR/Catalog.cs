@@ -81,9 +81,13 @@ namespace designAR
         public Item selectItem(String s)
         {
             Item i;
-            names2items.TryGetValue(s, out i);
-            i.Selected = true;
-            return new Item(i);
+            bool success = names2items.TryGetValue(s, out i);
+            if (success)
+            {
+                i.Selected = true;
+                return new Item(i);
+            }
+            else return null;
         }
         public void display(GameTime gameTime)
         {
