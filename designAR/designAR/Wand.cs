@@ -29,14 +29,15 @@ namespace designAR
     class Wand
     {
         private const int IDLE_STATE = 0, PLACING_STATE = 1, MANIPULATING_STATE = 2;
-        //private int state = 0;
+        protected enum STATES { SELECTING, PLACING, MANIPULATING };
+
+        private STATES state;
         private SpriteBatch spriteBatch;
-        //private Texture2D crosshairIdle;
         private GraphicsDevice graphicsDevice;
         private Scene scene;
         private Catalog catalog;
         private Room room;
-        private Item itemToPlace;
+        private Item selectedItem;
 
         Vector3 nearSource;
         Vector3 farSource;
@@ -51,16 +52,15 @@ namespace designAR
             scene = theScene;
             graphicsDevice = gDevice;
             catalog = cat;
-
             room = rm;
+
+            state = STATES.SELECTING;
 
             spriteBatch = new SpriteBatch(graphicsDevice);
 
 
             screenCenter = new Vector2(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f);
-            //nearSource = new Vector3(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f, 0);
             nearSource = new Vector3(screenCenter, 0);
-            //farSource = new Vector3(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f, 1);
             farSource = new Vector3(screenCenter, 1);
 
             // Add a mouse click callback function to perform ray picking when mouse is clicked
@@ -70,12 +70,53 @@ namespace designAR
             KeyboardInput.Instance.KeyPressEvent += new HandleKeyPress(KeyPressHandler);
         }
 
+
+        private void MouseClickHandler(int button, Point mouseLocation)
+        {
+            switch (state)
+            {
+                case STATES.SELECTING:
+                    if (button == MouseInput.LeftButton)
+                    {
+                        Select();
+                    }
+                    break;
+                case STATES.PLACING:
+                    if (button == MouseInput.RightButton)
+                    {
+                        Place();
+                    }
+                    else if (button == MouseInput.LeftButton)
+                    {
+                        Select();
+                    }
+                    break;
+                case STATES.MANIPULATING:
+                    if (button == MouseInput.RightButton)
+                    {
+                        Manipulate();
+                    }
+                    else if (button == MouseInput.LeftButton)
+                    {
+                        selectedItem.Selected = false;
+                        selectedItem = null;
+                        setState(STATES.SELECTING);
+                    }
+                    break;
+            }
+
+        }
+
         private void Select()
         {
-            // 0 means on the near clipping plane, and 1 means on the far clipping plane
-            //Vector3 nearSource = new Vector3(mouseLocation.X, mouseLocation.Y, 0);
-            //Vector3 farSource = new Vector3(mouseLocation.X, mouseLocation.Y, 1);
+           if(catalog.isVisible() && !room.isVisble())
+                SelectFromCatalog();
 
+           // SelectFromRoom();
+        }
+
+        private void SelectFromCatalog()
+        {
             // Now convert the near and far source to actual near and far 3D points based on our eye location
             // and view frustum
             Vector3 nearPoint = graphicsDevice.Viewport.Unproject(nearSource,
@@ -85,8 +126,7 @@ namespace designAR
 
             // Have the physics engine intersect the pick ray defined by the nearPoint and farPoint with
             // the physics objects in the scene (which we have set up to approximate the model geometry).
-            List<PickedObject> pickedObjects = ((NewtonPhysics)scene.PhysicsEngine).PickRayCast(
-                nearPoint, farPoint);
+            List<PickedObject> pickedObjects = ((NewtonPhysics)scene.PhysicsEngine).PickRayCast(nearPoint, farPoint);
 
             // If one or more objects intersect with our ray vector
             if (pickedObjects.Count > 0)
@@ -100,7 +140,8 @@ namespace designAR
                 //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
                 Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 // Getting an new instance of the item
-                itemToPlace = catalog.selectItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                selectedItem = catalog.selectItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                setState(STATES.PLACING);
             }
             else
             {
@@ -140,35 +181,67 @@ namespace designAR
                 //itemToPlace = catalog.selectItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 Notifier.AddMessage(pickedObjects[0].IntersectParam.ToString() + " " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
 
-                if (itemToPlace != null)
+                if (selectedItem != null)
                 {
-                    itemToPlace.BindTo(room);
+                    selectedItem.BindTo(room);
                     Vector3 direction = farPoint - nearPoint;
-                    direction.Normalize();
-                    Vector3 placement = nearPoint + direction*float.Parse(pickedObjects[0].IntersectParam.ToString());
+                    Vector3 placement = nearPoint + direction*pickedObjects[0].IntersectParam;
                     Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
                     Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
-                    itemToPlace.MoveTo(placement);
+                    //placement.Z = 0f;
+                    selectedItem.MoveTo(placement);
+                    setState(STATES.MANIPULATING);
                 }
             }
         }
 
-        public void Draw()
-        {
-            spriteBatch.Begin();
-            spriteBatch.Draw(currentCursor, cursorPosition, Color.White);
-            spriteBatch.End();
-        }
+ 
 
-        private void MouseClickHandler(int button, Point mouseLocation)
+
+        private void Manipulate()
         {
-            if (button == MouseInput.LeftButton)
+            Console.WriteLine("Manipulate!");
+            Notifier.AddMessage("Manipulate!");
+
+            // Now convert the near and far source to actual near and far 3D points based on our eye location
+            // and view frustum
+            Vector3 nearPoint = graphicsDevice.Viewport.Unproject(nearSource,
+                State.ProjectionMatrix, State.ViewMatrix, room.getMarkerTransform());
+            Vector3 farPoint = graphicsDevice.Viewport.Unproject(farSource,
+                State.ProjectionMatrix, State.ViewMatrix, room.getMarkerTransform());
+
+            // Have the physics engine intersect the pick ray defined by the nearPoint and farPoint with
+            // the physics objects in the scene (which we have set up to approximate the model geometry).
+            List<PickedObject> pickedObjects = ((NewtonPhysics)scene.PhysicsEngine).PickRayCast(
+                nearPoint, farPoint);
+
+            // If one or more objects intersect with our ray vector
+            if (pickedObjects.Count > 0)
             {
-                Select();
-            }
-            else if (button == MouseInput.RightButton)
-            {
-                Place();
+                // Since PickedObject can be compared (which means it implements IComparable), we can sort it in 
+                // the order of closest intersected object to farthest intersected object
+                pickedObjects.Sort();
+
+                // We only care about the closest picked object for now, so we'll simply display the name 
+                // of the closest picked object whose container is a geometry node
+                //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
+                Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                // Getting an new instance of the item
+                //itemToPlace = catalog.selectItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                Notifier.AddMessage(pickedObjects[0].IntersectParam.ToString() + " " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+
+                if (selectedItem != null)
+                {
+                    //itemToPlace.BindTo(room);
+                    Vector3 direction = farPoint - nearPoint;
+                    //direction.Normalize();
+                    Vector3 placement = nearPoint + direction * pickedObjects[0].IntersectParam;
+                    Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
+                    Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
+                    //placement.Z = 0f;
+                    selectedItem.MoveTo(placement);
+                    //setState(STATES.MANIPULATING);
+                }
             }
         }
 
@@ -181,11 +254,24 @@ namespace designAR
             }
         }
 
+        public void Draw()
+        {
+            spriteBatch.Begin();
+            spriteBatch.Draw(currentCursor, cursorPosition, Color.White);
+            spriteBatch.End();
+        }
+
         internal void setTexture(Texture2D sprite)
         {
             this.selectSprite = sprite;
             currentCursor = selectSprite;
             cursorPosition = new Vector2(screenCenter.X - currentCursor.Width / 2f, screenCenter.Y - currentCursor.Height / 2f);
+        }
+
+        private void setState(STATES s)
+        {
+            this.state = s;
+            //TODO: Set new cursor
         }
     }
 }
