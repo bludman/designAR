@@ -256,7 +256,7 @@ namespace designAR
             //groundMarkerNode.Smoother = new DESSmoother(0.2f, 0.1f, 1, 1);
 #else
             //   groundMarkerNode = new MarkerNode(scene.MarkerTracker, "ALVARGroundArray.xml");
-            groundMarkerNode = new MarkerNode(this.scene.MarkerTracker, "ALVARConfig_14000.txt");
+            groundMarkerNode = new MarkerNode(this.scene.MarkerTracker, "ALVARConfig.txt");
 
 #endif
 
