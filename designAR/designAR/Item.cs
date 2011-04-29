@@ -127,6 +127,12 @@ namespace designAR
             //((NewtonPhysics)scene.PhysicsEngine).AddCollisionCallback(pair, callback);
         }
 
+        public void BindTo(IBindable b)
+        {
+
+            BindTo(b.getBindNode());
+        }
+
         public void BindTo(BranchNode parentNode)
         {
             if(trans!= null &&  trans.Parent!=null )
