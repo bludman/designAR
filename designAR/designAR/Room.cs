@@ -29,17 +29,17 @@ using GoblinXNA.Sounds; // Required for sound effects
 using GoblinXNA.Graphics.ParticleEffects; // required for particle effects
 using GoblinXNA.UI;
 
-namespace designAR
+namespace designAR  
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Room //: Microsoft.Xna.Framework.Game
+    public class Room : IBindable//: Microsoft.Xna.Framework.Game
     {
 
 
         private Scene scene;
-        private MarkerNode groundMarkerNode, toolbarMarkerNode;
+        public MarkerNode groundMarkerNode, toolbarMarkerNode;
         private GeometryNode grid1, grid2, grid3, grid4, grid5, grid6, grid7;
         private TransformNode grid1TransNode, grid2TransNode, grid3TransNode, grid4TransNode, grid5TransNode, grid6TransNode, grid7TransNode;
         private Material grid1Material;
@@ -340,6 +340,11 @@ namespace designAR
         public Matrix getMarkerTransform()
         {
             return this.groundMarkerNode.WorldTransformation;
+        }
+
+        public BranchNode getBindNode()
+        {
+            return this.groundMarkerNode;
         }
     }
 

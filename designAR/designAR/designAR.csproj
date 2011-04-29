@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Catalog.cs" />
+    <Compile Include="IBindable.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="ItemLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

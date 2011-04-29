@@ -128,6 +128,9 @@ namespace designAR
                 // Getting an new instance of the item
                 //itemToPlace = catalog.selectItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 Notifier.AddMessage(pickedObjects[0].IntersectParam.ToString() + " " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+
+                if (itemToPlace != null)
+                    itemToPlace.BindTo(room);
             }
         }
 
