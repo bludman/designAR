@@ -159,7 +159,7 @@ namespace designAR
             grid1.Physics.Pickable = true;
             grid1.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
             grid1.AddToPhysicsEngine = true;
-
+            grid1.IsOccluder = true;
 
             grid1Material = new Material();
             grid1Material.Diffuse = Color.Gray.ToVector4();
@@ -338,7 +338,10 @@ namespace designAR
 
         }
 
-
+        public Matrix getMarkerTransform()
+        {
+            return this.groundMarkerNode.WorldTransformation;
+        }
     }
 
 }

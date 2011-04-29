@@ -35,7 +35,7 @@ namespace designAR
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
         private Wand wand;
-        //protected Room room;
+        protected Room room;
          Catalog catalog;
 
         protected bool useStaticImage;
@@ -76,7 +76,9 @@ namespace designAR
         private void CreateObjects()
         {
             catalog = new Catalog(scene);
-            wand = new Wand(scene, graphics.GraphicsDevice, catalog);
+            room = new Room(scene, 60, 60);
+            room.Initialize();
+            wand = new Wand(scene, graphics.GraphicsDevice, catalog, room);
             //room = new Room();
         }
 
