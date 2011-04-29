@@ -31,7 +31,6 @@ namespace designAR
         private const int IDLE_STATE = 0, PLACING_STATE = 1, MANIPULATING_STATE = 2;
         //private int state = 0;
         private SpriteBatch spriteBatch;
-        //private Texture2D crosshairIdle;
         private GraphicsDevice graphicsDevice;
         private Scene scene;
         private Catalog catalog;
@@ -43,19 +42,17 @@ namespace designAR
         Vector2 screenCenter;
         Vector2 cursorPosition;
 
-        protected Texture2D selectSprite;
-        protected Texture2D currentCursor;
+        private Texture2D selectSprite;
+        private Texture2D currentCursor;
 
         public Wand(Scene theScene, GraphicsDevice gDevice, Catalog cat, Room rm)
         {
             scene = theScene;
             graphicsDevice = gDevice;
             catalog = cat;
-
             room = rm;
 
             spriteBatch = new SpriteBatch(graphicsDevice);
-
 
             screenCenter = new Vector2(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f);
             //nearSource = new Vector3(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f, 0);
