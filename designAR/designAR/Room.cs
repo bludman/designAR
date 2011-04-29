@@ -159,7 +159,7 @@ namespace designAR
             grid1.Physics.Pickable = true;
             grid1.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
             grid1.AddToPhysicsEngine = true;
-            grid1.IsOccluder = true;
+            //grid1.IsOccluder = true;
 
             grid1Material = new Material();
             grid1Material.Diffuse = Color.Gray.ToVector4();
@@ -174,9 +174,8 @@ namespace designAR
             grid2 = new GeometryNode("Grid Box2");//front wall
             grid2.Model = new Box(floorBreadth, floorLength, 1);
             grid2TransNode = new TransformNode();
-            grid2TransNode.Translation = new Vector3(floorBreadth / 3, 0, floorLength / 2);  // 1 0
+            grid2TransNode.Translation = new Vector3(floorBreadth / 3, 0, floorLength/2);  // 1 0
             grid2TransNode.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90));
-            grid2TransNode.Translation = new Vector3(floorBreadth / 3, -floorLength / 2, 1);
             grid2.Material = grid1Material;
             grid2.AddToPhysicsEngine = true;
             grid2.Physics.Collidable = true;
@@ -188,7 +187,7 @@ namespace designAR
             grid3 = new GeometryNode("Grid Box3");//right side wall
             grid3.Model = new Box(floorBreadth, floorLength, 1);
             grid3TransNode = new TransformNode();
-            grid3TransNode.Translation = new Vector3(0, -floorLength / 2, floorLength / 2); // -1 0
+            grid3TransNode.Translation = new Vector3(floorBreadth*4.2f/5, -floorLength / 2, floorLength / 2); // -1 0
             grid3TransNode.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathHelper.ToRadians(90));
             grid3.Material = grid1Material;
             grid3.AddToPhysicsEngine = true;
