@@ -147,5 +147,10 @@ namespace designAR
             return this.marker.WorldTransformation;
         }
 
+
+        internal bool isVisible()
+        {
+            return this.marker.MarkerFound;
+        }
     }
 }
