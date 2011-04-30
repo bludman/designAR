@@ -319,8 +319,10 @@ namespace designAR
 
         public Item getObject(String itemName)
         {
-
-            return objectsInRoom[itemName];
+            if (objectsInRoom.ContainsKey(itemName))
+                return objectsInRoom[itemName];
+            else
+                return null;
             //TODO: return transformNode corresponding to the object with label ObjectName.  
         }
 
