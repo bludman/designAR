@@ -33,6 +33,7 @@ namespace designAR
         protected bool selected;
         protected Vector3 restrictedDimension;
         protected static int instance = 0;
+
         protected int instanceNumber;
         protected string name;
       
@@ -40,14 +41,14 @@ namespace designAR
 
 
 
-        public Item(IModel model,string label)
+        public Item(IModel model,string name)
         {
-            name = label;
-            instanceNumber = instance;
+            this.name = name;
+            this.instanceNumber = instance;
             restrictedDimension = new Vector3(1);
-            geo = new GeometryNode(label);
-            trans = new TransformNode(label+"Trans"+instance);
-            //instance++;
+            geo = new GeometryNode(this.Label);
+            trans = new TransformNode(this.Label+"_Trans");
+            instance++;
             trans.AddChild(geo);
 
             geo.Model = model;
@@ -76,11 +77,27 @@ namespace designAR
             get { return trans.Scale; }
             set { trans.Scale = value; }
         }
+
+
         public virtual string Name
         {
             get { return name; }
             set { name = value; }
         }
+
+        public virtual int InstanceNumber
+        {
+            get { return instanceNumber; }
+            //set { instanceNumber = value; }
+        }
+
+        public virtual string Label
+        {
+            get { return name+"_"+instanceNumber; }
+            //set { name = value; }
+        }
+
+
          public virtual bool Selected
         {
 
@@ -159,12 +176,5 @@ namespace designAR
             trans.Translation = position*restrictedDimension;
         }
 
-        
-
-
-        internal Item clone()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

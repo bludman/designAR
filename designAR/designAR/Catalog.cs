@@ -61,7 +61,7 @@ namespace designAR
             int grid_y = 0;
             foreach (Item i in item_list)
             {
-                names2items.Add(i.Name, i);
+                names2items.Add(i.Label, i);
             }
             for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
             {
@@ -78,6 +78,20 @@ namespace designAR
              
             }
         }
+
+        //THIS IS JUST A TEST 
+        public Item selectPlacedItem(String s)
+        {
+            Item i;
+            bool success = names2items.TryGetValue(s, out i);
+            if (success)
+            {
+                i.Selected = true;
+                return i;
+            }
+            else return null;
+        }
+
         public Item selectItem(String s)
         {
             Item i;
@@ -89,6 +103,8 @@ namespace designAR
             }
             else return null;
         }
+
+
         public void display(GameTime gameTime)
         {
             if (marker.MarkerFound)
