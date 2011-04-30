@@ -112,7 +112,8 @@ namespace designAR
            if(catalog.isVisible() && !room.isVisble())
                 SelectFromCatalog();
 
-           // SelectFromRoom();
+           //if (room.isVisble() && !catalog.isVisible())
+                //SelectFromRoom();
         }
 
         private void SelectFromCatalog()
@@ -142,6 +143,41 @@ namespace designAR
                 // Getting an new instance of the item
                 selectedItem = catalog.selectItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 setState(STATES.PLACING);
+            }
+            else
+            {
+                Console.WriteLine("NOTHING HERE BITCHES");
+            }
+        }
+
+
+        private void SelectFromRoom()
+        {
+            // Now convert the near and far source to actual near and far 3D points based on our eye location
+            // and view frustum
+            Vector3 nearPoint = graphicsDevice.Viewport.Unproject(nearSource,
+                State.ProjectionMatrix, State.ViewMatrix, room.getMarkerTransform());
+            Vector3 farPoint = graphicsDevice.Viewport.Unproject(farSource,
+                State.ProjectionMatrix, State.ViewMatrix, room.getMarkerTransform());
+
+            // Have the physics engine intersect the pick ray defined by the nearPoint and farPoint with
+            // the physics objects in the scene (which we have set up to approximate the model geometry).
+            List<PickedObject> pickedObjects = ((NewtonPhysics)scene.PhysicsEngine).PickRayCast(nearPoint, farPoint);
+
+            // If one or more objects intersect with our ray vector
+            if (pickedObjects.Count > 0)
+            {
+                // Since PickedObject can be compared (which means it implements IComparable), we can sort it in 
+                // the order of closest intersected object to farthest intersected object
+                pickedObjects.Sort();
+
+                // We only care about the closest picked object for now, so we'll simply display the name 
+                // of the closest picked object whose container is a geometry node
+                //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
+                Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                // Getting an new instance of the item
+                selectedItem = catalog.selectPlacedItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                setState(STATES.MANIPULATING);
             }
             else
             {
@@ -190,6 +226,8 @@ namespace designAR
                     Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
                     //placement.Z = 0f;
                     selectedItem.MoveTo(placement);
+                    selectedItem.MoveTo(placement);
+                    selectedItem.Selected = true;
                     setState(STATES.MANIPULATING);
                 }
             }

@@ -33,6 +33,7 @@ namespace designAR
         protected bool selected;
         protected Vector3 restrictedDimension;
         protected static int instance = 0;
+
         protected int instanceNumber;
         protected string name;
       
@@ -40,21 +41,22 @@ namespace designAR
 
 
 
-        public Item(IModel model,string label)
+        public Item(IModel model,string name)
         {
-            name = label;
-            instanceNumber = instance;
+            this.name = name;
+            this.instanceNumber = instance;
             restrictedDimension = new Vector3(1);
-            geo = new GeometryNode(label);
-            trans = new TransformNode(label+"Trans"+instance);
-            //instance++;
+            geo = new GeometryNode(this.Label);
+            trans = new TransformNode(this.Label+"_Trans");
+
+            instance++;
             trans.AddChild(geo);
 
             geo.Model = model;
             geo.Physics.Shape = GoblinXNA.Physics.ShapeType.ConvexHull;
             geo.Physics.Pickable = true;
             geo.AddToPhysicsEngine = true;
-            trans.Rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(90), 0, MathHelper.ToRadians(90));
+            trans.Rotation = Quaternion.CreateFromYawPitchRoll(0, 0, 0);
 
         }
 
@@ -76,11 +78,27 @@ namespace designAR
             get { return trans.Scale; }
             set { trans.Scale = value; }
         }
+
+
         public virtual string Name
         {
             get { return name; }
             set { name = value; }
         }
+
+        public virtual int InstanceNumber
+        {
+            get { return instanceNumber; }
+            //set { instanceNumber = value; }
+        }
+
+        public virtual string Label
+        {
+            get { return name+"_"+instanceNumber; }
+            //set { name = value; }
+        }
+
+
          public virtual bool Selected
         {
 
@@ -159,12 +177,23 @@ namespace designAR
             trans.Translation = position*restrictedDimension;
         }
 
-        
-
-
-        internal Item clone()
+        public void RotateBy(float degrees)
         {
-            throw new NotImplementedException();
+            Vector3 rotationAxis;
+            if(restrictedDimension.X == 0)
+            {
+                rotationAxis = Vector3.UnitX;
+            } 
+            else if (restrictedDimension.Z == 0)
+            {
+                rotationAxis = Vector3.UnitZ;
+            } 
+            else 
+            {
+                rotationAxis = Vector3.UnitY;
+            }
+            trans.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90))*Quaternion.CreateFromAxisAngle(rotationAxis, MathHelper.ToRadians(degrees));
         }
+
     }
 }
