@@ -48,6 +48,7 @@ namespace designAR
             restrictedDimension = new Vector3(1);
             geo = new GeometryNode(this.Label);
             trans = new TransformNode(this.Label+"_Trans");
+
             instance++;
             trans.AddChild(geo);
 
@@ -55,7 +56,7 @@ namespace designAR
             geo.Physics.Shape = GoblinXNA.Physics.ShapeType.ConvexHull;
             geo.Physics.Pickable = true;
             geo.AddToPhysicsEngine = true;
-            trans.Rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(90), 0, MathHelper.ToRadians(90));
+            trans.Rotation = Quaternion.CreateFromYawPitchRoll(0, 0, 0);
 
         }
 
@@ -174,6 +175,24 @@ namespace designAR
         public void MoveTo(Vector3 position)
         {
             trans.Translation = position*restrictedDimension;
+        }
+
+        public void RotateBy(float degrees)
+        {
+            Vector3 rotationAxis;
+            if(restrictedDimension.X == 0)
+            {
+                rotationAxis = Vector3.UnitX;
+            } 
+            else if (restrictedDimension.Z == 0)
+            {
+                rotationAxis = Vector3.UnitZ;
+            } 
+            else 
+            {
+                rotationAxis = Vector3.UnitY;
+            }
+            trans.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90))*Quaternion.CreateFromAxisAngle(rotationAxis, MathHelper.ToRadians(degrees));
         }
 
     }

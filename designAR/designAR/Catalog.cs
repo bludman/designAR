@@ -32,7 +32,7 @@ namespace designAR
     class Catalog
     {
 
-        private MarkerNode marker, changeMarker, wimMarker;
+        private MarkerNode marker, changeMarker;
        // List<TransformNode> objects;
         int changeTime;
         int num_displayed = 9;
@@ -49,10 +49,8 @@ namespace designAR
             
             this.marker = new MarkerNode(my_scene.MarkerTracker, "palette_marker.xml");
             this.changeMarker = new MarkerNode(my_scene.MarkerTracker, "palette_turn_marker.xml");
-            this.wimMarker = new MarkerNode(my_scene.MarkerTracker, "wim_marker.xml");
             my_scene.RootNode.AddChild(marker);
             my_scene.RootNode.AddChild(changeMarker);
-            my_scene.RootNode.AddChild(wimMarker);
             library = new ItemLibrary("models.txt");
             names2items = new Dictionary<string, Item>();
             item_list = library.getAllItems();
@@ -73,7 +71,6 @@ namespace designAR
                     grid_y -= 10;
                 }
                 item_list[i].BindTo(marker);
-                // objects[i].Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)Math.PI / 2);
                 item_list[i].MoveTo( new Vector3(grid_x, grid_y, 0));
              
             }
@@ -112,10 +109,10 @@ namespace designAR
                 for (int i = cur_start; i < cur_end && i <item_list.Count; i++)
                 {
                    // objects[i].Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)Math.PI / 2) * Quaternion.CreateFromAxisAngle(Vector3.UnitY, cur_angle);
-
+                    item_list[i].RotateBy(cur_angle);
                 }
-                if (cur_angle >= Math.PI * 2) cur_angle = 0;
-                else cur_angle += 0.01f;
+                if (cur_angle >= 360) cur_angle = 0;
+                else cur_angle += 1f;
 
             }
             if (changeMarker.MarkerFound && (gameTime.TotalGameTime.Seconds - changeTime) > 2)
@@ -156,11 +153,6 @@ namespace designAR
 
                 }
 
-
-            }
-            else if (wimMarker.MarkerFound)
-            {
-                Console.WriteLine("found wim");
 
             }
         }
