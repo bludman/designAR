@@ -113,8 +113,8 @@ namespace designAR
            if(catalog.isVisible() && !room.isVisble())
                 SelectFromCatalog();
 
-           //if (room.isVisble() && !catalog.isVisible())
-                //SelectFromRoom();
+           if (room.isVisble() && !catalog.isVisible())
+                SelectFromRoom();
         }
 
         private void SelectFromCatalog()
@@ -184,8 +184,21 @@ namespace designAR
                 //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
                 Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 // Getting an new instance of the item
+
+                Console.WriteLine("Duplicating item from " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 selectedItem = catalog.selectPlacedItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                setState(STATES.MANIPULATING);
+
+                if (selectedItem != null)
+                {
+                    Console.WriteLine("New item is " + selectedItem.Label);
+                    setState(STATES.MANIPULATING);
+                }
+                else
+                {
+                    Console.WriteLine("No item received");
+                }
+
+
             }
             else
             {
