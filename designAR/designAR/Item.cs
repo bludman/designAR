@@ -82,7 +82,7 @@ namespace designAR
         private void build(IModel model, string name, Material material)
         {
             build(model, name);
-            geo.Material = material;
+            //geo.Material = material;
             ((Model)geo.Model).UseInternalMaterials = true;
         }
 
@@ -105,7 +105,7 @@ namespace designAR
             Model m = (Model)loader.Load("", tokens[NAME]);
 
             Material defaultMaterial = new Material();
-            defaultMaterial.Diffuse = new Vector4(0, 0.5f, 0, 1);
+            defaultMaterial.Diffuse = Color.White.ToVector4(); //new Vector4(0, 0.5f, 0, 1);
             defaultMaterial.Specular = Color.White.ToVector4();
             defaultMaterial.SpecularPower = 10;
 
