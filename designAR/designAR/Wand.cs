@@ -142,6 +142,7 @@ namespace designAR
                 //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
                 Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 // Getting an new instance of the item
+
                 selectedItem = catalog.selectItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 setState(STATES.PLACING);
             }
@@ -226,7 +227,6 @@ namespace designAR
                     Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
                     Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
                     //placement.Z = 0f;
-                    selectedItem.MoveTo(placement);
                     selectedItem.MoveTo(placement);
                     selectedItem.Selected = true;
                     setState(STATES.MANIPULATING);

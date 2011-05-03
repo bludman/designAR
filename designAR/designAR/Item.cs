@@ -45,7 +45,7 @@ namespace designAR
         {
             this.name = name;
             this.instanceNumber = instance;
-            restrictedDimension = new Vector3(1,0,1);
+            restrictedDimension = new Vector3(1,1,0);
             geo = new GeometryNode(this.Label);
             trans = new TransformNode(this.Label+"_Trans");
 
@@ -186,11 +186,11 @@ namespace designAR
             } 
             else if (restrictedDimension.Z == 0)
             {
-                rotationAxis = Vector3.UnitZ;
+                rotationAxis = Vector3.UnitY;
             } 
             else 
             {
-                rotationAxis = Vector3.UnitY;
+                rotationAxis = Vector3.UnitZ;
             }
             trans.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90))*Quaternion.CreateFromAxisAngle(rotationAxis, MathHelper.ToRadians(degrees));
         }
