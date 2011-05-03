@@ -29,7 +29,7 @@ namespace designAR
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class designAR : Microsoft.Xna.Framework.Game
+     class designAR : Microsoft.Xna.Framework.Game
     {
         protected Scene scene;
         protected GraphicsDeviceManager graphics;
