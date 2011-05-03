@@ -45,6 +45,8 @@ namespace designAR
         Vector2 cursorPosition;
 
         private Texture2D selectSprite;
+        private Texture2D placeSprite;
+        private Texture2D manipulateSprite;
         private Texture2D currentCursor;
 
         public Wand(Scene theScene, GraphicsDevice gDevice, Catalog cat, Room rm)
@@ -298,17 +300,44 @@ namespace designAR
             spriteBatch.End();
         }
 
-        internal void setTexture(Texture2D sprite)
+        public void setSelectCrosshair(Texture2D sprite)
         {
             this.selectSprite = sprite;
-            currentCursor = selectSprite;
+            setTexture(selectSprite);
+        }
+
+        public void setPlaceCrosshair(Texture2D sprite)
+        {
+            this.placeSprite = sprite;
+        }
+
+        public void setManipulateCrosshair(Texture2D sprite)
+        {
+            this.manipulateSprite = sprite;
+        }
+
+        internal void setTexture(Texture2D sprite)
+        {
+            currentCursor = sprite;
             cursorPosition = new Vector2(screenCenter.X - currentCursor.Width / 2f, screenCenter.Y - currentCursor.Height / 2f);
         }
 
         private void setState(STATES s)
         {
             this.state = s;
-            //TODO: Set new cursor
+
+            switch (state)
+            {
+                case STATES.SELECTING:
+                    setTexture(selectSprite);
+                    break;
+                case STATES.PLACING:
+                    setTexture(placeSprite);
+                    break;
+                case STATES.MANIPULATING:
+                    setTexture(manipulateSprite);
+                    break;
+            }
         }
     }
 }
