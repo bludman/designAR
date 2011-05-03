@@ -142,8 +142,15 @@ namespace designAR
                 //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
                 Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 // Getting an new instance of the item
+
+                Console.WriteLine("Duplicating item from " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 selectedItem = catalog.selectItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                setState(STATES.PLACING);
+
+                if (selectedItem != null)
+                {
+                    Console.WriteLine("New item is " + selectedItem.Label);
+                    setState(STATES.PLACING);
+                }
             }
             else
             {
@@ -226,7 +233,6 @@ namespace designAR
                     Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
                     Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
                     //placement.Z = 0f;
-                    selectedItem.MoveTo(placement);
                     selectedItem.MoveTo(placement);
                     selectedItem.Selected = true;
                     setState(STATES.MANIPULATING);
