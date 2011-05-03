@@ -111,7 +111,9 @@ namespace designAR
             if (success)
             {
                 i.Selected = true;
-                return new Item(i);
+                Item newI = new Item(i);
+                names2items.Add(newI.Label, newI);
+                return newI;
             }
             else return null;
         }
@@ -126,8 +128,9 @@ namespace designAR
                    // objects[i].Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, (float)Math.PI / 2) * Quaternion.CreateFromAxisAngle(Vector3.UnitY, cur_angle);
                     item_list[i].RotateBy(cur_angle);
                 }
-                if (cur_angle >= 360) cur_angle = 0;
-                else cur_angle += 1f;
+                if (cur_angle 
+                    >= 360) cur_angle = 0;
+                else cur_angle += 0.02f * (float)gameTime.ElapsedGameTime.Milliseconds;
 
             }
             if (changeMarker.MarkerFound && (gameTime.TotalGameTime.Seconds - changeTime) > 2)

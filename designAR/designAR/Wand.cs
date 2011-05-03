@@ -44,8 +44,10 @@ namespace designAR
         Vector2 screenCenter;
         Vector2 cursorPosition;
 
-        protected Texture2D selectSprite;
-        protected Texture2D currentCursor;
+        private Texture2D selectSprite;
+        private Texture2D placeSprite;
+        private Texture2D manipulateSprite;
+        private Texture2D currentCursor;
 
         public Wand(Scene theScene, GraphicsDevice gDevice, Catalog cat, Room rm)
         {
@@ -57,7 +59,6 @@ namespace designAR
             state = STATES.SELECTING;
 
             spriteBatch = new SpriteBatch(graphicsDevice);
-
 
             screenCenter = new Vector2(graphicsDevice.Viewport.Width / 2.0f, graphicsDevice.Viewport.Height / 2.0f);
             nearSource = new Vector3(screenCenter, 0);
@@ -112,8 +113,8 @@ namespace designAR
            if(catalog.isVisible() && !room.isVisble())
                 SelectFromCatalog();
 
-           //if (room.isVisble() && !catalog.isVisible())
-                //SelectFromRoom();
+           if (room.isVisble() && !catalog.isVisible())
+                SelectFromRoom();
         }
 
         private void SelectFromCatalog()
@@ -151,6 +152,7 @@ namespace designAR
 
                 
                 // Getting an new instance of the item
+                /*
                 if (tempNode.GroupID!=room.roomGroupID)
                 {
                     Console.WriteLine("Parent of the selected object: " + tempNode.Parent.Name);
@@ -159,7 +161,18 @@ namespace designAR
                     selectedItem = catalog.selectItem(tempNode.Name);
                     setState(STATES.PLACING);
                 }
-                
+                */
+
+
+                Console.WriteLine("Duplicating item from " + (tempNode.Name));
+                selectedItem = catalog.selectItem(tempNode.Name);
+
+                if (selectedItem != null)
+                {
+                    Console.WriteLine("New item is " + selectedItem.Label);
+                    setState(STATES.PLACING);
+                }
+
             }
             else
             {
@@ -203,7 +216,7 @@ namespace designAR
 
 
 
-                // Getting an new instance of the item
+                /* Getting an new instance of the item
                 if (tempNode.GroupID != room.roomGroupID)
                 {
                     Console.WriteLine("Parent of the selected object: " + tempNode.Parent.Name);
@@ -212,17 +225,35 @@ namespace designAR
                     selectedItem = catalog.selectItem(tempNode.Name);
                     setState(STATES.PLACING);
                 }
-
+                */
                 /******* The above code replaces this chunk
 
                 Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 // Getting an new instance of the item
+<<<<<<< HEAD
                GeometryNode tempNode= (GeometryNode)pickedObjects[0].PickedPhysicsObject.Container;
                if (tempNode.GroupID != room.roomGroupID)
                {
                    selectedItem = catalog.selectPlacedItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                    setState(STATES.MANIPULATING);
                }*/
+
+
+                Console.WriteLine("Duplicating item from " + tempNode.Name);
+                selectedItem = catalog.selectPlacedItem(tempNode.Name);
+
+                if (selectedItem != null)
+                {
+                    Console.WriteLine("New item is " + selectedItem.Label);
+                    setState(STATES.MANIPULATING);
+                }
+                else
+                {
+                    Console.WriteLine("No item received");
+                }
+
+
+
             }
             else
             {
@@ -270,7 +301,6 @@ namespace designAR
                     Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
                     Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
                     //placement.Z = 0f;
-                    selectedItem.MoveTo(placement);
                     selectedItem.MoveTo(placement);
                     selectedItem.Selected = true;
                     setState(STATES.MANIPULATING);
@@ -344,17 +374,44 @@ namespace designAR
             spriteBatch.End();
         }
 
-        internal void setTexture(Texture2D sprite)
+        public void setSelectCrosshair(Texture2D sprite)
         {
             this.selectSprite = sprite;
-            currentCursor = selectSprite;
+            setTexture(selectSprite);
+        }
+
+        public void setPlaceCrosshair(Texture2D sprite)
+        {
+            this.placeSprite = sprite;
+        }
+
+        public void setManipulateCrosshair(Texture2D sprite)
+        {
+            this.manipulateSprite = sprite;
+        }
+
+        internal void setTexture(Texture2D sprite)
+        {
+            currentCursor = sprite;
             cursorPosition = new Vector2(screenCenter.X - currentCursor.Width / 2f, screenCenter.Y - currentCursor.Height / 2f);
         }
 
         private void setState(STATES s)
         {
             this.state = s;
-            //TODO: Set new cursor
+
+            switch (state)
+            {
+                case STATES.SELECTING:
+                    setTexture(selectSprite);
+                    break;
+                case STATES.PLACING:
+                    setTexture(placeSprite);
+                    break;
+                case STATES.MANIPULATING:
+                    setTexture(manipulateSprite);
+                    break;
+            }
         }
     }
 }

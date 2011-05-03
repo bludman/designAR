@@ -33,21 +33,34 @@ namespace designAR
         protected bool selected;
         protected Vector3 restrictedDimension;
         protected static int instance = 0;
+       
 
         protected int instanceNumber;
         protected string name;
+        protected string[] savedTokens;
       
         protected static Item selectedItem;
+        protected static ModelLoader loader = new ModelLoader();
+
+
+        public static int NAME = 0;
+        public static int SCALE = 1;
 
 
 
         public Item(IModel model,string name)
         {
+            build(model, name);
+        }
+
+        private void build(IModel model, string name)
+        {
             this.name = name;
             this.instanceNumber = instance;
-            restrictedDimension = new Vector3(1,0,1);
+
+            restrictedDimension = new Vector3(1,1,0);
             geo = new GeometryNode(this.Label);
-            trans = new TransformNode(this.Label+"_Trans");
+            trans = new TransformNode(this.Label + "_Trans");
 
             instance++;
             trans.AddChild(geo);
@@ -57,19 +70,49 @@ namespace designAR
             geo.Physics.Pickable = true;
             geo.AddToPhysicsEngine = true;
             trans.Rotation = Quaternion.CreateFromYawPitchRoll((float)Math.PI / 2, 0, (float)Math.PI / 2);
-
         }
 
-        public Item(IModel model, string label, Material material) : this(model,label)
+
+
+        public Item(IModel model, string name, Material material) 
         {
-            geo.Material = material;
+            build(model, name, material);
+        }
+
+        private void build(IModel model, string name, Material material)
+        {
+            build(model, name);
+            //geo.Material = material;
             ((Model)geo.Model).UseInternalMaterials = true;
         }
 
 
+        
+        /*
         public Item(Item other) : this(other.geo.Model, other.name)
         {
+            //this.geo.Model = new Model(null,other.geo.Model.
+            //this.geo.Model.CopyGeometry(other.geo.Model);
             this.Scale = new Vector3(other.Scale.X, other.Scale.Y, other.Scale.Z);
+        }
+         * */
+
+        public Item(Item other) : this(other.savedTokens)
+        {}
+
+        public Item(string[] tokens)
+        {
+            Model m = (Model)loader.Load("", tokens[NAME]);
+
+            Material defaultMaterial = new Material();
+            defaultMaterial.Diffuse = Color.White.ToVector4(); //new Vector4(0, 0.5f, 0, 1);
+            defaultMaterial.Specular = Color.White.ToVector4();
+            defaultMaterial.SpecularPower = 10;
+
+            build(m, tokens[NAME], defaultMaterial);
+            this.Scale = new Vector3(float.Parse(tokens[Item.SCALE]));
+            this.savedTokens = tokens;
+
         }
 
 
@@ -104,8 +147,7 @@ namespace designAR
 
             get { return selected; }
             set { 
-                selected = value; 
-                geo.Model.ShowBoundingBox = value;
+                
                 if (value)
                 {
                     if (selectedItem != null)
@@ -118,6 +160,9 @@ namespace designAR
                     selectedItem = null;
                 }
 
+                selected = value;
+                geo.Model.ShowBoundingBox = value;
+                
             }
         }
 
@@ -186,11 +231,11 @@ namespace designAR
             } 
             else if (restrictedDimension.Z == 0)
             {
-                rotationAxis = Vector3.UnitZ;
+                rotationAxis = Vector3.UnitY;
             } 
             else 
             {
-                rotationAxis = Vector3.UnitY;
+                rotationAxis = Vector3.UnitZ;
             }
             trans.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90))*Quaternion.CreateFromAxisAngle(rotationAxis, MathHelper.ToRadians(degrees));
         }

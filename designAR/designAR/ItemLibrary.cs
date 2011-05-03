@@ -43,8 +43,7 @@ namespace designAR
                new System.IO.StreamReader(filename);
 
 
-            int LABEL = 0;
-            int SCALE = 1;
+          
             
             while ((line = file.ReadLine()) != null)
             {
@@ -53,19 +52,23 @@ namespace designAR
                     continue;
 
                 string[] tokens=line.Split(',');
-                Console.WriteLine("Loading: "+tokens[LABEL]);
-                Model m = (Model)loader.Load("", tokens[LABEL]);
+                Console.WriteLine("Loading: "+tokens[Item.NAME]);
 
-                //IModel m = new Cylinder(5, 5, 10, 10); //new Sphere(10, 20, 30);
+                /*
+                Model m = (Model)loader.Load("", tokens[Item.NAME]);
+
                 Material defaultMaterial = new Material();
                 defaultMaterial.Diffuse = new Vector4(0, 0.5f, 0, 1);
                 defaultMaterial.Specular = Color.White.ToVector4();
                 defaultMaterial.SpecularPower = 10;
-                //Item item = new Item(m, defaultMaterial);
-                Item item = new Item(m, tokens[LABEL], defaultMaterial);
-                item.Scale = new Vector3(float.Parse(tokens[SCALE]));
+
+                Item item = new Item(m, tokens[Item.NAME], defaultMaterial);
+                */
+
+                Item item = new Item(tokens);
+                //item.Scale = new Vector3(float.Parse(tokens[Item.SCALE]));
                 items.Add(item);
-                itemMap.Add(tokens[LABEL], item);
+                itemMap.Add(tokens[Item.NAME], item);
 
 
                 counter++;
