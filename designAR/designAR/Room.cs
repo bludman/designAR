@@ -34,7 +34,7 @@ namespace designAR
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Room : IBindable//: Microsoft.Xna.Framework.Game
+     class Room : IBindable//: Microsoft.Xna.Framework.Game
     {
 
 
@@ -49,7 +49,7 @@ namespace designAR
         private int gridOffsetY = 40;
         DirectShowCapture2 captureDevice;
         private int floorLength, floorBreadth;
-        private Dictionary<String, TransformNode> objectsInRoom;
+        public Dictionary<String, Item> objectsInRoom;
 
 
         Random random = new Random(); // Random number generator. Required for particle effects
@@ -59,7 +59,7 @@ namespace designAR
             this.scene = sceneFromMain;
             this.floorBreadth = floorBreadth;
             this.floorLength = floorLength;
-            this.objectsInRoom = new Dictionary<string, TransformNode>();
+            this.objectsInRoom = new Dictionary<string, Item>();
             //Content.RootDirectory = "Content";
             //this.Initialize();
         }
@@ -162,7 +162,9 @@ namespace designAR
             //grid1.IsOccluder = true;
 
             grid1Material = new Material();
-            grid1Material.Diffuse = Color.Gray.ToVector4();
+            Vector4 alpha = Color.Gray.ToVector4();
+            Vector3 tempAlpha = new Vector3(alpha.X, alpha.Y, alpha.Z);
+            grid1Material.Diffuse = new Vector4(tempAlpha, 0.2f);
             grid1Material.Specular = Color.White.ToVector4();
 
             grid1Material.SpecularPower = 20;
@@ -256,7 +258,7 @@ namespace designAR
             //groundMarkerNode.Smoother = new DESSmoother(0.2f, 0.1f, 1, 1);
 #else
             //   groundMarkerNode = new MarkerNode(scene.MarkerTracker, "ALVARGroundArray.xml");
-            groundMarkerNode = new MarkerNode(this.scene.MarkerTracker, "ALVARConfig_14000.txt");
+            groundMarkerNode = new MarkerNode(this.scene.MarkerTracker, "ALVARConfig.txt");
 
 #endif
 
@@ -307,18 +309,20 @@ namespace designAR
 
 
         }
-        public void placeObject(String objectLabel, TransformNode objectTransNode)
+        public void addObject(Item item)
         {
-            groundMarkerNode.AddChild(objectTransNode);
-            objectsInRoom.Add(objectLabel, objectTransNode);
+           
+            objectsInRoom.Add(item.Label, item);
             //TODO: add object name along with its corresponding TransformNode to a HashMap.
-            Console.Write("object added: " + objectLabel);
+            Console.Write("object added: " + item.Label);
         }
 
-        public TransformNode getObject(String ObjectName)
+        public Item getObject(String itemName)
         {
-
-            return objectsInRoom[ObjectName];
+            if (objectsInRoom.ContainsKey(itemName))
+                return objectsInRoom[itemName];
+            else
+                return null;
             //TODO: return transformNode corresponding to the object with label ObjectName.  
         }
 
