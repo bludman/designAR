@@ -84,9 +84,7 @@ namespace designAR
             boxTransNode.Translation += new Vector3(9, -7, 0);
 
             Material boxMat = new Material();
-            boxMat.Diffuse = Color.CornflowerBlue.ToVector4();
-            boxMat.Specular = Color.CornflowerBlue.ToVector4();
-            boxMat.SpecularPower = 0;
+            boxMat.Diffuse = Color.DimGray.ToVector4();
 
             boxNode.Material = boxMat;
 
