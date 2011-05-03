@@ -113,7 +113,9 @@ namespace designAR
             if (success)
             {
                 i.Selected = true;
-                return new Item(i);
+                Item newI = new Item(i);
+                names2items.Add(newI.Label, newI);
+                return newI;
             }
             else return null;
         }
