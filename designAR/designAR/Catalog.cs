@@ -74,6 +74,21 @@ namespace designAR
                 item_list[i].MoveTo( new Vector3(grid_x, grid_y, 0));
              
             }
+
+            // Create a geometry node with a model of box
+            GeometryNode boxNode = new GeometryNode("Box");
+            boxNode.Model = new Box(60,60,0.1f);
+
+            Material boxMat = new Material();
+            boxMat.Diffuse = Color.Black.ToVector4();
+            boxMat.Specular = Color.White.ToVector4();
+            boxMat.SpecularPower = 5;
+
+            boxNode.Material = boxMat;
+
+            marker.AddChild(boxNode);
+
+
         }
 
         //THIS IS JUST A TEST 

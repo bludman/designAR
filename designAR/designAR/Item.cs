@@ -45,7 +45,7 @@ namespace designAR
         {
             this.name = name;
             this.instanceNumber = instance;
-            restrictedDimension = new Vector3(1);
+            restrictedDimension = new Vector3(1,0,1);
             geo = new GeometryNode(this.Label);
             trans = new TransformNode(this.Label+"_Trans");
 
@@ -56,7 +56,7 @@ namespace designAR
             geo.Physics.Shape = GoblinXNA.Physics.ShapeType.ConvexHull;
             geo.Physics.Pickable = true;
             geo.AddToPhysicsEngine = true;
-            trans.Rotation = Quaternion.CreateFromYawPitchRoll(0, 0, 0);
+            trans.Rotation = Quaternion.CreateFromYawPitchRoll((float)Math.PI / 2, 0, (float)Math.PI / 2);
 
         }
 
