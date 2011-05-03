@@ -63,30 +63,34 @@ namespace designAR
             }
             for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
             {
-                grid_x += 10;
 
-                if (grid_x > 46)
+                if (grid_x > 20)
                 {
                     grid_x = 0;
                     grid_y -= 10;
                 }
                 item_list[i].BindTo(marker);
-                item_list[i].MoveTo( new Vector3(grid_x, grid_y, 0));
+                item_list[i].MoveTo(new Vector3(grid_x, grid_y, 0));
+                grid_x += 10;
              
             }
 
             // Create a geometry node with a model of box
             GeometryNode boxNode = new GeometryNode("Box");
-            boxNode.Model = new Box(60,60,0.1f);
+            boxNode.Model = new Box(30,30,0.1f);
+
+            TransformNode boxTransNode = new TransformNode();
+            boxTransNode.AddChild(boxNode);
+            boxTransNode.Translation += new Vector3(9, -7, 0);
 
             Material boxMat = new Material();
-            boxMat.Diffuse = Color.Black.ToVector4();
-            boxMat.Specular = Color.White.ToVector4();
-            boxMat.SpecularPower = 5;
+            boxMat.Diffuse = Color.CornflowerBlue.ToVector4();
+            boxMat.Specular = Color.CornflowerBlue.ToVector4();
+            boxMat.SpecularPower = 0;
 
             boxNode.Material = boxMat;
 
-            marker.AddChild(boxNode);
+            marker.AddChild(boxTransNode);
 
 
         }

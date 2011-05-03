@@ -1,14 +1,4 @@
-#modleName,scale,yaw,pitch,roll
-#
-#table,55,90,0,90	#bounding box is f**ed up
-#chair05,0.3,90,0,90
-#Coffeetb,0.06,90,0,90
-#consoleFBX,0.03,90,0,90
-#Table2,0.33,90,0,90,true
-#chair,0.33,90,0,90	#doesn't work right
-#cabinet,0.33,90,0,90,true
-#Furniture14,0.033,90,0,90
-#ka_design_m6_bed_fbx_upY,0.1,90,0,90	#not cool
-#komodsalda8237FBX,0.1,90,0,90	#not cool
+#modelname,scale,yaw,pitch,roll
 models\table1,0.5,0,0,0
 models\chair1,0.5,0,0,0
+models\dresser1,0.5,0,0
