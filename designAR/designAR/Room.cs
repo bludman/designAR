@@ -37,7 +37,7 @@ namespace designAR
      class Room : IBindable//: Microsoft.Xna.Framework.Game
     {
 
-
+        
         private Scene scene;
         public MarkerNode groundMarkerNode, toolbarMarkerNode;
         private GeometryNode grid1, grid2, grid3, grid4, grid5, grid6, grid7;
@@ -50,6 +50,7 @@ namespace designAR
         DirectShowCapture2 captureDevice;
         private int floorLength, floorBreadth;
         public Dictionary<String, Item> objectsInRoom;
+        public int roomGroupID = 1;
 
 
         Random random = new Random(); // Random number generator. Required for particle effects
@@ -151,12 +152,13 @@ namespace designAR
             grid[1] = new GeometryNode("GridBox" + i);
 
 
-            grid1 = new GeometryNode("Grid Box1");//floor
+            grid1 = new GeometryNode("Floor");//floor
             grid1.Model = new Box(floorBreadth, floorLength, 1);
             grid1TransNode = new TransformNode();
             grid1TransNode.Translation = new Vector3(floorBreadth / 3, -floorLength / 2, 1);      // 0 0
             grid1.Physics.Collidable = true;
             grid1.Physics.Pickable = true;
+            grid1.GroupID = roomGroupID;
             grid1.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
             grid1.AddToPhysicsEngine = true;
             //grid1.IsOccluder = true;
@@ -173,12 +175,13 @@ namespace designAR
 
 
 
-            grid2 = new GeometryNode("Grid Box2");//front wall
+            grid2 = new GeometryNode("Front wall");//front wall
             grid2.Model = new Box(floorBreadth, floorLength, 1);
             grid2TransNode = new TransformNode();
             grid2TransNode.Translation = new Vector3(floorBreadth / 3, 0, floorLength/2);  // 1 0
             grid2TransNode.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90));
             grid2.Material = grid1Material;
+            grid2.GroupID = roomGroupID;
             grid2.AddToPhysicsEngine = true;
             grid2.Physics.Collidable = true;
             grid2.Physics.Pickable = true;
@@ -186,13 +189,14 @@ namespace designAR
 
 
 
-            grid3 = new GeometryNode("Grid Box3");//right side wall
+            grid3 = new GeometryNode("Right wall");//right side wall
             grid3.Model = new Box(floorBreadth, floorLength, 1);
             grid3TransNode = new TransformNode();
             grid3TransNode.Translation = new Vector3(floorBreadth*4.2f/5, -floorLength / 2, floorLength / 2); // -1 0
             grid3TransNode.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathHelper.ToRadians(90));
             grid3.Material = grid1Material;
             grid3.AddToPhysicsEngine = true;
+            grid3.GroupID = roomGroupID;
             grid3.Physics.Pickable = true;
             grid3.Physics.Collidable = true;
             grid3.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
