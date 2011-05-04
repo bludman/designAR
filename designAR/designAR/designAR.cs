@@ -183,6 +183,7 @@ namespace designAR
                 this.Exit();
 
             // TODO: Add your update logic here
+            wand.Update(gameTime);
            
             base.Update(gameTime);
            
@@ -195,7 +196,6 @@ namespace designAR
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
             
             catalog.display(gameTime);
             base.Draw(gameTime);

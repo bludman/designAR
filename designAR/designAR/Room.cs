@@ -47,7 +47,6 @@ namespace designAR
         private int gridCenterY = 0;
         private int gridOffsetX = 40;
         private int gridOffsetY = 40;
-        DirectShowCapture2 captureDevice;
         private int floorLength, floorBreadth;
         public Dictionary<String, Item> objectsInRoom;
         public int roomGroupID = 1;
@@ -355,10 +354,12 @@ namespace designAR
             return this.groundMarkerNode;
         }
 
-        internal bool isVisble()
+
+        internal bool isVisible()
         {
             return this.groundMarkerNode.MarkerFound;
         }
+
     }
 
 }

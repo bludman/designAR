@@ -42,7 +42,8 @@ namespace designAR
         ItemLibrary library;
         List<Item> item_list;
         Scene my_scene;
-        Dictionary<String, Item> names2items;
+        Dictionary<String, Item> names2itemsInCatalog;
+        Dictionary<String, Item> names2itemsInRoom;
         public Catalog(Scene s)
         {
             this.my_scene = s;
@@ -52,41 +53,44 @@ namespace designAR
             my_scene.RootNode.AddChild(marker);
             my_scene.RootNode.AddChild(changeMarker);
             library = new ItemLibrary("models.txt");
-            names2items = new Dictionary<string, Item>();
+            names2itemsInCatalog = new Dictionary<string, Item>();
+            names2itemsInRoom = new Dictionary<string, Item>();
             item_list = library.getAllItems();
           //  this.objects = l;
             int grid_x = 0;
             int grid_y = 0;
             foreach (Item i in item_list)
             {
-                names2items.Add(i.Label, i);
+                names2itemsInCatalog.Add(i.Label, i);
             }
             for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
             {
-                grid_x += 10;
 
-                if (grid_x > 46)
+                if (grid_x > 20)
                 {
                     grid_x = 0;
                     grid_y -= 10;
                 }
                 item_list[i].BindTo(marker);
-                item_list[i].MoveTo( new Vector3(grid_x, grid_y, 0));
+                item_list[i].MoveTo(new Vector3(grid_x, grid_y, 0));
+                grid_x += 10;
              
             }
 
             // Create a geometry node with a model of box
             GeometryNode boxNode = new GeometryNode("Box");
-            boxNode.Model = new Box(60,60,0.1f);
+            boxNode.Model = new Box(30,30,0.1f);
+
+            TransformNode boxTransNode = new TransformNode();
+            boxTransNode.AddChild(boxNode);
+            boxTransNode.Translation += new Vector3(9, -7, -0.5f);
 
             Material boxMat = new Material();
-            boxMat.Diffuse = Color.Black.ToVector4();
-            boxMat.Specular = Color.White.ToVector4();
-            boxMat.SpecularPower = 5;
+            boxMat.Diffuse = Color.DimGray.ToVector4();
 
             boxNode.Material = boxMat;
 
-            marker.AddChild(boxNode);
+            marker.AddChild(boxTransNode);
 
 
         }
@@ -95,7 +99,7 @@ namespace designAR
         public Item selectPlacedItem(String s)
         {
             Item i;
-            bool success = names2items.TryGetValue(s, out i);
+            bool success = names2itemsInRoom.TryGetValue(s, out i);
             if (success)
             {
                 i.Selected = true;
@@ -104,20 +108,29 @@ namespace designAR
             else return null;
         }
 
-        public Item selectItem(String s)
+        public Item selectCatalogItem(String s)
         {
             Item i;
-            bool success = names2items.TryGetValue(s, out i);
+            bool success = names2itemsInCatalog.TryGetValue(s, out i);
             if (success)
             {
                 i.Selected = true;
                 Item newI = new Item(i);
-                names2items.Add(newI.Label, newI);
+                names2itemsInRoom.Add(newI.Label, newI);
                 return newI;
             }
             else return null;
         }
 
+        public bool catalogContains(String s)
+        {
+            return names2itemsInCatalog.ContainsKey(s);
+        }
+
+        public bool roomContains(String s)
+        {
+            return names2itemsInRoom.ContainsKey(s);
+        }
 
         public void display(GameTime gameTime)
         {
@@ -139,7 +152,7 @@ namespace designAR
                 for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
                 {
 
-                    item_list[i].UnbindFrom(marker);
+                    item_list[i].Unbind();
 
 
                 }

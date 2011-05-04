@@ -29,8 +29,8 @@ namespace designAR
     class Wand
     {
         protected enum STATES { SELECTING, PLACING, MANIPULATING };
-
         private STATES state;
+
         private SpriteBatch spriteBatch;
         private GraphicsDevice graphicsDevice;
         private Scene scene;
@@ -68,12 +68,20 @@ namespace designAR
 
             // Add a mouse click callback function to perform ray picking when mouse is clicked
             MouseInput.Instance.MouseClickEvent += new HandleMouseClick(MouseClickHandler);
+            MouseInput.Instance.MouseWheelMoveEvent += new HandleMouseWheelMove(MouseWheelHandler);
 
             // Add a keyboard press handler for user input
             KeyboardInput.Instance.KeyPressEvent += new HandleKeyPress(KeyPressHandler);
         }
 
-
+        private void MouseWheelHandler(int delta, int value)
+        {
+            if (state == STATES.MANIPULATING)
+            {
+                selectedItem.RotateBy(delta/200f);
+            }
+        }
+        
         private void MouseClickHandler(int button, Point mouseLocation)
         {
             switch (state)
@@ -112,10 +120,10 @@ namespace designAR
 
         private void Select()
         {
-           if(catalog.isVisible() && !room.isVisble())
+           if(catalog.isVisible() && !room.isVisible())
                 SelectFromCatalog();
 
-           if (room.isVisble() && !catalog.isVisible())
+           if (room.isVisible() && !catalog.isVisible())
                 SelectFromRoom();
         }
 
@@ -167,7 +175,7 @@ namespace designAR
 
 
                 Console.WriteLine("Duplicating item from " + (tempNode.Name));
-                selectedItem = catalog.selectItem(tempNode.Name);
+                selectedItem = catalog.selectCatalogItem(tempNode.Name);
 
                 if (selectedItem != null)
                 {
@@ -259,7 +267,7 @@ namespace designAR
             }
             else
             {
-                Console.WriteLine("NOTHING HERE BITCHES");
+                Console.WriteLine("Nothing to select");
             }
         }
 
@@ -309,8 +317,6 @@ namespace designAR
                 }
             }
         }
-
- 
 
 
         private void Manipulate()
@@ -366,6 +372,15 @@ namespace designAR
             if (keys == Keys.A)
             {
                 actionDisabled = !actionDisabled;
+            }
+
+            if (keys == Keys.Delete || keys == Keys.Back)
+            {
+                if (state == STATES.MANIPULATING)
+                {
+                    selectedItem.Unbind();
+                    setState(STATES.SELECTING);
+                }
             }
         }
 
@@ -424,6 +439,130 @@ namespace designAR
             }
         }
 
-       
+        private bool isOverCatalogItem()
+        {
+
+            if (catalog.isVisible())
+            {
+                // Now convert the near and far source to actual near and far 3D points based on our eye location
+                // and view frustum
+                Vector3 nearPoint = graphicsDevice.Viewport.Unproject(nearSource,
+                    State.ProjectionMatrix, State.ViewMatrix, catalog.getMarkerTransform());
+                Vector3 farPoint = graphicsDevice.Viewport.Unproject(farSource,
+                    State.ProjectionMatrix, State.ViewMatrix, catalog.getMarkerTransform());
+
+                // Have the physics engine intersect the pick ray defined by the nearPoint and farPoint with
+                // the physics objects in the scene (which we have set up to approximate the model geometry).
+                List<PickedObject> pickedObjects = ((NewtonPhysics)scene.PhysicsEngine).PickRayCast(nearPoint, farPoint);
+
+                // If one or more objects intersect with our ray vector
+                if (pickedObjects.Count > 0)
+                {
+                    // Since PickedObject can be compared (which means it implements IComparable), we can sort it in 
+                    // the order of closest intersected object to farthest intersected object
+                    pickedObjects.Sort();
+
+                    // We only care about the closest picked object for now, so we'll simply display the name 
+                    // of the closest picked object whose container is a geometry node
+                    //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
+                    GeometryNode tempNode = new GeometryNode();
+                    int i = 0;
+                    tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
+                    while (tempNode.GroupID == room.roomGroupID && i + 1 < pickedObjects.Count)
+                    {
+                        i++;
+                        tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
+                    }
+
+
+                    Console.WriteLine("Over item from " + (tempNode.Name));
+                    return catalog.catalogContains(tempNode.Name);
+
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false; //catalog not visible
+            }
+
+        }
+
+        private bool isOverRoomItem()
+        {
+            if (room.isVisible())
+            {
+                // Now convert the near and far source to actual near and far 3D points based on our eye location
+                // and view frustum
+                Vector3 nearPoint = graphicsDevice.Viewport.Unproject(nearSource,
+                    State.ProjectionMatrix, State.ViewMatrix, room.getMarkerTransform());
+                Vector3 farPoint = graphicsDevice.Viewport.Unproject(farSource,
+                    State.ProjectionMatrix, State.ViewMatrix, room.getMarkerTransform());
+
+                // Have the physics engine intersect the pick ray defined by the nearPoint and farPoint with
+                // the physics objects in the scene (which we have set up to approximate the model geometry).
+                List<PickedObject> pickedObjects = ((NewtonPhysics)scene.PhysicsEngine).PickRayCast(nearPoint, farPoint);
+
+                // If one or more objects intersect with our ray vector
+                if (pickedObjects.Count > 0)
+                {
+                    // Since PickedObject can be compared (which means it implements IComparable), we can sort it in 
+                    // the order of closest intersected object to farthest intersected object
+                    pickedObjects.Sort();
+
+                    // We only care about the closest picked object for now, so we'll simply display the name 
+                    // of the closest picked object whose container is a geometry node
+                    //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
+                    GeometryNode tempNode = new GeometryNode();
+                    int i = 0;
+                    tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
+                    while (tempNode.GroupID == room.roomGroupID && i + 1 < pickedObjects.Count)
+                    {
+                        i++;
+                        tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
+                    }
+
+
+                    Console.WriteLine("Over item from " + (tempNode.Name));
+                    return catalog.roomContains(tempNode.Name);
+
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false; //room not visible
+            }
+        }
+
+
+
+        internal void Update(GameTime gameTime)
+        {
+            validateAction();
+        }
+
+        private void validateAction()
+        {
+            switch (state)
+            {
+                case STATES.SELECTING:
+                    actionDisabled = !(isOverCatalogItem() || isOverRoomItem());
+                    break;
+                case STATES.PLACING:
+
+
+                    break;
+                case STATES.MANIPULATING:
+
+                    break;
+            }
+        }
     }
 }
