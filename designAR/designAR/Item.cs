@@ -220,6 +220,18 @@ namespace designAR
         public void MoveTo(Vector3 position)
         {
             trans.Translation = position*restrictedDimension;
+
+            /*
+            Matrix translate= Matrix.CreateTranslation(position*restrictedDimension);
+            Matrix scale= Matrix.CreateScale(trans.Scale);
+            Matrix rotate= Matrix.CreateFromQuaternion(trans.Rotation);
+
+
+            trans.WorldTransformation = scale * rotate * translate;
+           */
+            trans.Scale = new Vector3(0.5f);
+
+
         }
 
         public void RotateBy(float degrees)
@@ -238,6 +250,7 @@ namespace designAR
                 rotationAxis = Vector3.UnitZ;
             }
             trans.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90))*Quaternion.CreateFromAxisAngle(rotationAxis, MathHelper.ToRadians(degrees));
+            trans.Scale = new Vector3(0.5f);
         }
 
     }
