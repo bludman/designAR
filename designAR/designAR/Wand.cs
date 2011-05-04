@@ -244,30 +244,6 @@ namespace designAR
                 }
 
 
-
-                /* Getting an new instance of the item
-                if (tempNode.GroupID != room.roomGroupID)
-                {
-                    Console.WriteLine("Parent of the selected object: " + tempNode.Parent.Name);
-                    Console.WriteLine("Group id of the object is :" + tempNode.GroupID);
-                    Console.WriteLine(tempNode.Name);
-                    selectedItem = catalog.selectItem(tempNode.Name);
-                    setState(STATES.PLACING);
-                }
-                */
-                /******* The above code replaces this chunk
-
-                Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                // Getting an new instance of the item
-<<<<<<< HEAD
-               GeometryNode tempNode= (GeometryNode)pickedObjects[0].PickedPhysicsObject.Container;
-               if (tempNode.GroupID != room.roomGroupID)
-               {
-                   selectedItem = catalog.selectPlacedItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                   setState(STATES.MANIPULATING);
-               }*/
-
-
                 Console.WriteLine("Duplicating item from " + tempNode.Name);
                 selectedItem = catalog.selectPlacedItem(tempNode.Name);
 
