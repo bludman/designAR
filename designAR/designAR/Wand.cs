@@ -82,7 +82,6 @@ namespace designAR
             {
                 if (isFineRotation)
                 {
-
                     selectedItem.RotateBy(value / 100f);
                 }
                 else
@@ -578,7 +577,7 @@ namespace designAR
                     // We only care about the closest picked object for now, so we'll simply display the name 
                     // of the closest picked object whose container is a geometry node
                     //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
-                    GeometryNode tempNode = new GeometryNode();
+                     GeometryNode  tempNode = new GeometryNode();
                     int i = 0;
                     tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
                     while (tempNode.GroupID == room.roomGroupID && i + 1 < pickedObjects.Count)
