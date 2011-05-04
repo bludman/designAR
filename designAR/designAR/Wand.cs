@@ -53,6 +53,8 @@ namespace designAR
         private Texture2D currentCursor;
         private Texture2D disabledActionSprite;
 
+        protected HUD hud;
+
         public Wand(Scene theScene, GraphicsDevice gDevice, Catalog cat, Room rm)
         {
             scene = theScene;
@@ -433,6 +435,7 @@ namespace designAR
         private void setState(STATES s)
         {
             this.actionState = s;
+            hud.StatusMessage = s.ToString();
 
             switch (actionState)
             {
@@ -654,6 +657,33 @@ namespace designAR
             selectedItemRotation += gameTime.ElapsedGameTime.Milliseconds/50f;
             if (selectedItemRotation > 360)
                 selectedItemRotation -= 360;
+
+
+            hud.StatusMessage = getStatusMessage();
+        }
+
+        private string getStatusMessage()
+        {
+            
+            if (currentCursor == manipulateSprite)
+                if (actionDisabled)
+                    return "Move cursor to room to manipulate";
+                else
+                    return "Left Click: Confirm | Right Click: Move | Scroll Wheel: Rotate";
+            else if (currentCursor == placeSprite)
+                if (actionDisabled)
+                    return "Move cursor to room to place the object";
+                else
+                    return "Right Click to place at target location";
+            else if (currentCursor == selectSprite)
+                if (actionDisabled)
+                    return "Click on an object to select it";
+                else
+                    return "Left Click to select this item";
+            else if (actionDisabled)
+                return "Invalid position for this action";
+            else
+                return "";
         }
 
         private bool isValidAction()
@@ -669,6 +699,12 @@ namespace designAR
             }
 
             return false;
+        }
+
+        public virtual HUD Hud
+        {
+            //get { return restrictedDimension; }
+            set { hud = value; }
         }
     }
 }

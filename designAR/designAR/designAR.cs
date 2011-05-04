@@ -85,6 +85,7 @@ namespace designAR
             wand.setPlaceCrosshair(Content.Load<Texture2D>("crosshairs/crosshairplace"));
             wand.setManipulateCrosshair(Content.Load<Texture2D>("crosshairs/crosshairmanip"));
             wand.setDisabledCrosshair(Content.Load<Texture2D>("crosshairs/actionDisabled"));
+            wand.Hud = hud;
         }
 
         private void ConfigureState()
@@ -201,6 +202,7 @@ namespace designAR
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
             catalog.display(gameTime);
+            hud.Draw(gameTime);
             base.Draw(gameTime);
             wand.Draw();
             

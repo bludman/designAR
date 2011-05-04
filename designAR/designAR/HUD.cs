@@ -22,6 +22,8 @@ namespace designAR
         Scene scene;
         ContentManager Content;
 
+        protected string status="",topLeftText="";
+
 
         public HUD(Scene scene, Microsoft.Xna.Framework.Content.ContentManager Content)
         {
@@ -76,11 +78,53 @@ namespace designAR
             cornerPanelNode.Material.Diffuse = new Vector4(tempVec, 0.7f);
         }
 
-
+        
 
         internal void Update(GameTime gameTime)
         {
             //throw new NotImplementedException();
+        }
+
+        internal void Draw(GameTime gameTime)
+        {
+            DrawLabels();
+        }
+
+        private void DrawLabels()
+        {
+            UI2DRenderer.WriteText(
+                Vector2.Zero,
+                " " + status,
+                Color.DarkBlue,
+                textFont,
+                GoblinEnums.HorizontalAlignment.Left,
+                GoblinEnums.VerticalAlignment.Bottom
+            );
+
+            
+            UI2DRenderer.WriteText(
+              Vector2.Zero,
+              topLeftText,//"  Selected: " + (selected != null ? selected.Name : "Nothing"),//selectedObjectLabel,
+              Color.DarkBlue,
+              textFont,
+              GoblinEnums.HorizontalAlignment.Left,
+              GoblinEnums.VerticalAlignment.Top
+          );
+             
+
+        }
+
+
+        public virtual string StatusMessage
+        {
+            get { return status; }
+            set { status = value; }
+        }
+
+        public virtual string TopLeftText
+        {
+            get { return topLeftText; }
+            set { topLeftText = value; }
         }
     }
 }
