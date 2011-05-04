@@ -93,25 +93,44 @@ namespace designAR
                     }
                     break;
                 case STATES.PLACING:
+                    if (actionDisabled)
+                        break;
+
                     if (button == MouseInput.RightButton)
                     {
-                        Place();
+                        if (!isOverCatalogItem() && !isOverRoomItem())
+                        {
+                            Place();
+                        }
                     }
                     else if (button == MouseInput.LeftButton)
                     {
-                        Select();
+                        if (isOverCatalogItem() || isOverRoomItem()) 
+                        {
+                            Select();
+                        }
+                        
                     }
                     break;
                 case STATES.MANIPULATING:
+                    
                     if (button == MouseInput.RightButton)
                     {
-                        Manipulate();
+                        if (!isOverCatalogItem() && !isOverRoomItem())
+                        {
+                            Manipulate();
+                        }
                     }
                     else if (button == MouseInput.LeftButton)
                     {
+
                         selectedItem.Selected = false;
                         selectedItem = null;
                         setState(STATES.SELECTING);
+                        if (isOverCatalogItem() || isOverRoomItem())
+                        {
+                            Select();
+                        }
                     }
                     break;
             }
