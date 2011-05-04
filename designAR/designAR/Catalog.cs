@@ -81,7 +81,7 @@ namespace designAR
 
             TransformNode boxTransNode = new TransformNode();
             boxTransNode.AddChild(boxNode);
-            boxTransNode.Translation += new Vector3(9, -7, 0);
+            boxTransNode.Translation += new Vector3(9, -7, -0.5f);
 
             Material boxMat = new Material();
             boxMat.Diffuse = Color.DimGray.ToVector4();
