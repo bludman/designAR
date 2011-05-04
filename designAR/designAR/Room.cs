@@ -98,10 +98,7 @@ namespace designAR
             // Create the ground that represents the physical ground marker array
             CreateGround();
 
-
         }
-
-
 
         public void CreateLights()
         {

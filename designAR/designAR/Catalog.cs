@@ -32,6 +32,7 @@ namespace designAR
     class Catalog
     {
 
+        private const bool SPIN = false;
         private MarkerNode marker, changeMarker;
        // List<TransformNode> objects;
         int changeTime;
@@ -66,14 +67,14 @@ namespace designAR
             for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
             {
 
-                if (grid_x > 20)
+                if (grid_x > 15)
                 {
                     grid_x = 0;
-                    grid_y -= 10;
+                    grid_y -= 15;
                 }
                 item_list[i].BindTo(marker);
                 item_list[i].MoveTo(new Vector3(grid_x, grid_y, 0));
-                grid_x += 10;
+                grid_x += 15;
              
             }
 
@@ -83,7 +84,7 @@ namespace designAR
 
             TransformNode boxTransNode = new TransformNode();
             boxTransNode.AddChild(boxNode);
-            boxTransNode.Translation += new Vector3(9, -7, -0.5f);
+            boxTransNode.Translation += new Vector3(6, -6, -0.5f);
 
             Material boxMat = new Material();
             boxMat.Diffuse = Color.DimGray.ToVector4();
@@ -134,7 +135,7 @@ namespace designAR
 
         public void display(GameTime gameTime)
         {
-            if (marker.MarkerFound)
+            if (marker.MarkerFound && SPIN)
             {
                 for (int i = cur_start; i < cur_end && i <item_list.Count; i++)
                 {
@@ -151,11 +152,9 @@ namespace designAR
 
                 for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
                 {
-
                     item_list[i].Unbind();
-
-
                 }
+
                 changeTime = gameTime.TotalGameTime.Seconds;
                 if (cur_end > item_list.Count)
                 {
