@@ -29,7 +29,7 @@ namespace designAR
     class Wand
     {
         protected enum STATES { SELECTING, PLACING, MANIPULATING };
-        private STATES state;
+        private STATES actionState;
 
         private SpriteBatch spriteBatch;
         private GraphicsDevice graphicsDevice;
@@ -58,7 +58,7 @@ namespace designAR
             catalog = cat;
             room = rm;
 
-            state = STATES.SELECTING;
+            actionState = STATES.SELECTING;
 
             spriteBatch = new SpriteBatch(graphicsDevice);
 
@@ -76,7 +76,7 @@ namespace designAR
 
         private void MouseWheelHandler(int delta, int value)
         {
-            if (state == STATES.MANIPULATING)
+            if (actionState == STATES.MANIPULATING)
             {
                 selectedItem.RotateBy(delta/200f);
             }
@@ -84,7 +84,7 @@ namespace designAR
         
         private void MouseClickHandler(int button, Point mouseLocation)
         {
-            switch (state)
+            switch (actionState)
             {
                 case STATES.SELECTING:
                     if (button == MouseInput.LeftButton)
@@ -93,25 +93,44 @@ namespace designAR
                     }
                     break;
                 case STATES.PLACING:
+                    if (actionDisabled)
+                        break;
+
                     if (button == MouseInput.RightButton)
                     {
-                        Place();
+                        if (!isOverCatalogItem() && !isOverRoomItem())
+                        {
+                            Place();
+                        }
                     }
                     else if (button == MouseInput.LeftButton)
                     {
-                        Select();
+                        if (isOverCatalogItem() || isOverRoomItem()) 
+                        {
+                            Select();
+                        }
+                        
                     }
                     break;
                 case STATES.MANIPULATING:
+                    
                     if (button == MouseInput.RightButton)
                     {
-                        Manipulate();
+                        if (!isOverCatalogItem() && !isOverRoomItem())
+                        {
+                            Manipulate();
+                        }
                     }
                     else if (button == MouseInput.LeftButton)
                     {
+
                         selectedItem.Selected = false;
                         selectedItem = null;
                         setState(STATES.SELECTING);
+                        if (isOverCatalogItem() || isOverRoomItem())
+                        {
+                            Select();
+                        }
                     }
                     break;
             }
@@ -376,7 +395,7 @@ namespace designAR
 
             if (keys == Keys.Delete || keys == Keys.Back)
             {
-                if (state == STATES.MANIPULATING)
+                if (actionState == STATES.MANIPULATING)
                 {
                     selectedItem.Unbind();
                     setState(STATES.SELECTING);
@@ -423,9 +442,9 @@ namespace designAR
 
         private void setState(STATES s)
         {
-            this.state = s;
+            this.actionState = s;
 
-            switch (state)
+            switch (actionState)
             {
                 case STATES.SELECTING:
                     setTexture(selectSprite);
@@ -541,28 +560,114 @@ namespace designAR
             }
         }
 
+        private bool isOverFloor()
+        {
+            if (room.isVisible())
+            {
+                // Now convert the near and far source to actual near and far 3D points based on our eye location
+                // and view frustum
+                Vector3 nearPoint = graphicsDevice.Viewport.Unproject(nearSource,
+                    State.ProjectionMatrix, State.ViewMatrix, room.getMarkerTransform());
+                Vector3 farPoint = graphicsDevice.Viewport.Unproject(farSource,
+                    State.ProjectionMatrix, State.ViewMatrix, room.getMarkerTransform());
+
+                // Have the physics engine intersect the pick ray defined by the nearPoint and farPoint with
+                // the physics objects in the scene (which we have set up to approximate the model geometry).
+                List<PickedObject> pickedObjects = ((NewtonPhysics)scene.PhysicsEngine).PickRayCast(nearPoint, farPoint);
+
+                // If one or more objects intersect with our ray vector
+                if (pickedObjects.Count > 0)
+                {
+                    // Since PickedObject can be compared (which means it implements IComparable), we can sort it in 
+                    // the order of closest intersected object to farthest intersected object
+                    pickedObjects.Sort();
+
+                    Console.WriteLine("Over " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                    return ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name.Equals("Floor");
+
+                    // We only care about the closest picked object for now, so we'll simply display the name 
+                    // of the closest picked object whose container is a geometry node
+                    //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
+                    GeometryNode tempNode = new GeometryNode();
+                    int i = 0;
+                    tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
+                    while (tempNode.GroupID == room.roomGroupID && i + 1 < pickedObjects.Count)
+                    {
+                        i++;
+                        tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
+                    }
+
+
+                    Console.WriteLine("Over " + (tempNode.Name));
+                    return catalog.roomContains(tempNode.Name);
+
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false; //room not visible
+            }
+        }
+
 
 
         internal void Update(GameTime gameTime)
         {
-            validateAction();
+            actionDisabled = !isValidAction();
+            if (actionState == STATES.PLACING)
+            {
+                if (isOverCatalogItem())
+                {
+                    setTexture(selectSprite);
+                    actionDisabled = false;
+                }
+                else if (isOverRoomItem()) //could be snapping icon in future
+                {
+                    setTexture(selectSprite);
+                    actionDisabled = false;
+                }
+                else
+                {
+                    setTexture(placeSprite);
+                }
+            }
+
+            if (actionState == STATES.MANIPULATING)
+            {
+                if (isOverCatalogItem())
+                {
+                    setTexture(selectSprite);
+                    actionDisabled = false;
+                }
+                else if (isOverRoomItem()) //could be snapping icon in future
+                {
+                    setTexture(selectSprite);
+                    actionDisabled = false;
+                }
+                else
+                {
+                    setTexture(manipulateSprite);
+                }
+            }
         }
 
-        private void validateAction()
+        private bool isValidAction()
         {
-            switch (state)
+            switch (actionState)
             {
                 case STATES.SELECTING:
-                    actionDisabled = !(isOverCatalogItem() || isOverRoomItem());
-                    break;
+                    return isOverCatalogItem() || isOverRoomItem();
                 case STATES.PLACING:
-
-
-                    break;
+                    return isOverFloor();
                 case STATES.MANIPULATING:
-
-                    break;
+                    return isOverFloor();
             }
+
+            return false;
         }
     }
 }
