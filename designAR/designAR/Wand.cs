@@ -30,7 +30,7 @@ namespace designAR
     {
         protected enum STATES { SELECTING, PLACING, MANIPULATING };
         private STATES actionState;
-
+        private bool isFineRotation = false;
         private SpriteBatch spriteBatch;
         private GraphicsDevice graphicsDevice;
         private Scene scene;
@@ -80,7 +80,19 @@ namespace designAR
         {
             if (actionState == STATES.MANIPULATING)
             {
-                selectedItem.RotateBy(delta/200f);
+                if (isFineRotation)
+                {
+
+                    selectedItem.RotateBy(value / 100f);
+                }
+                else
+                {
+                    float degrees = value / 10f;
+                    float rem = degrees % 15;
+                    degrees -= rem;
+                    selectedItem.RotateBy(degrees);
+                }
+                // Notifier.AddMessage("Scrolling delta: "+ delta + "   Value: " + value);
             }
         }
         
@@ -367,7 +379,10 @@ namespace designAR
             {
 
             }
-
+            if (keys == Keys.R)
+            {
+                isFineRotation = !isFineRotation;
+            }
             if (keys == Keys.Delete || keys == Keys.Back)
             {
                 if (actionState == STATES.MANIPULATING)
