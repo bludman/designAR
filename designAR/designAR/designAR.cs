@@ -34,9 +34,10 @@ namespace designAR
         protected Scene scene;
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
-        private Wand wand;
+        protected Wand wand;
         protected Room room;
-         Catalog catalog;
+        protected HUD hud;
+        protected Catalog catalog;
 
         protected bool useStaticImage;
 
@@ -70,6 +71,7 @@ namespace designAR
             
             ConfigureState();
             SetupMarkerTracking();
+            hud = new HUD(scene, Content);
             CreateObjects();
         }
 
@@ -185,7 +187,7 @@ namespace designAR
             // TODO: Add your update logic here
             wand.Update(gameTime);
             room.Update();
-           
+            hud.Update(gameTime);
             base.Update(gameTime);
            
         }
