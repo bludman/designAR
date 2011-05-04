@@ -115,11 +115,32 @@ namespace designAR
 
         }
 
+        public void SetAlpha(float a)
+        {
+            Vector4 tempColor=geo.Material.Diffuse;
+            Vector3 tempVec = new Vector3(tempColor.X, tempColor.Y, tempColor.Z);
+            geo.Material.Diffuse = new Vector4(tempVec, a);
+        }
+
 
         public virtual Vector3 Scale
         {
             get { return trans.Scale; }
             set { trans.Scale = value; }
+        }
+
+
+        public virtual Vector3 Translation
+        {
+            get { return trans.Translation; }
+            set { trans.Translation = value; }
+        }
+
+
+        public virtual Quaternion Rotation
+        {
+            get { return trans.Rotation; }
+            set { trans.Rotation = value; }
         }
 
 

@@ -37,6 +37,8 @@ namespace designAR
         private Catalog catalog;
         private Room room;
         private Item selectedItem;
+        private Item selectedItemDisplay;
+        private float selectedItemRotation = 0;
 
         protected bool actionDisabled = true;
 
@@ -158,24 +160,12 @@ namespace designAR
                     i++;
                     tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
                 }
-                
-
-                
-                // Getting an new instance of the item
-                /*
-                if (tempNode.GroupID!=room.roomGroupID)
-                {
-                    Console.WriteLine("Parent of the selected object: " + tempNode.Parent.Name);
-                    Console.WriteLine("Group id of the object is :" + tempNode.GroupID);
-                    Console.WriteLine(tempNode.Name);
-                    selectedItem = catalog.selectItem(tempNode.Name);
-                    setState(STATES.PLACING);
-                }
-                */
-
 
                 Console.WriteLine("Duplicating item from " + (tempNode.Name));
                 selectedItem = catalog.selectCatalogItem(tempNode.Name);
+
+                if (tempNode.GroupID != room.roomGroupID)
+                    DrawSelectedItem(catalog.cloneCatalogItem(tempNode.Name));
 
                 if (selectedItem != null)
                 {
@@ -190,6 +180,17 @@ namespace designAR
             }
         }
 
+        private void DrawSelectedItem(Item i)
+        {
+            if(selectedItemDisplay != null)
+                selectedItemDisplay.Unbind();
+            selectedItemDisplay = i;
+            selectedItemDisplay.BindTo(scene.RootNode);
+            selectedItemDisplay.Translation = new Vector3(.475f, -.4f, -1);
+            //selectedItemDisplay.Translation = new Vector3(0, .06f, -1);
+            selectedItemDisplay.Scale = new Vector3(0.005f, 0.005f, 0.005f);
+            selectedItemDisplay.SetAlpha(0.55f);
+        }
 
         private void SelectFromRoom()
         {
@@ -224,31 +225,6 @@ namespace designAR
                     tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
                 }
 
-
-
-                /* Getting an new instance of the item
-                if (tempNode.GroupID != room.roomGroupID)
-                {
-                    Console.WriteLine("Parent of the selected object: " + tempNode.Parent.Name);
-                    Console.WriteLine("Group id of the object is :" + tempNode.GroupID);
-                    Console.WriteLine(tempNode.Name);
-                    selectedItem = catalog.selectItem(tempNode.Name);
-                    setState(STATES.PLACING);
-                }
-                */
-                /******* The above code replaces this chunk
-
-                Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                // Getting an new instance of the item
-<<<<<<< HEAD
-               GeometryNode tempNode= (GeometryNode)pickedObjects[0].PickedPhysicsObject.Container;
-               if (tempNode.GroupID != room.roomGroupID)
-               {
-                   selectedItem = catalog.selectPlacedItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                   setState(STATES.MANIPULATING);
-               }*/
-
-
                 Console.WriteLine("Duplicating item from " + tempNode.Name);
                 selectedItem = catalog.selectPlacedItem(tempNode.Name);
 
@@ -261,9 +237,6 @@ namespace designAR
                 {
                     Console.WriteLine("No item received");
                 }
-
-
-
             }
             else
             {
@@ -313,6 +286,7 @@ namespace designAR
                     //placement.Z = 0f;
                     selectedItem.MoveTo(placement);
                     selectedItem.Selected = true;
+                    selectedItemDisplay.Unbind();
                     setState(STATES.MANIPULATING);
                 }
             }
@@ -371,7 +345,7 @@ namespace designAR
             // Detect key press "a"
             if (keys == Keys.A)
             {
-                actionDisabled = !actionDisabled;
+
             }
 
             if (keys == Keys.Delete || keys == Keys.Back)
@@ -546,6 +520,13 @@ namespace designAR
         internal void Update(GameTime gameTime)
         {
             validateAction();
+
+            if (selectedItemDisplay != null)
+                selectedItemDisplay.Rotation = Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), MathHelper.ToRadians(selectedItemRotation));
+
+            selectedItemRotation += gameTime.ElapsedGameTime.Milliseconds/50f;
+            if (selectedItemRotation > 360)
+                selectedItemRotation -= 360;
         }
 
         private void validateAction()
