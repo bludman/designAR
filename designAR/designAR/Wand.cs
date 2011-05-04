@@ -28,7 +28,6 @@ namespace designAR
 {
     class Wand
     {
-        private const int IDLE_STATE = 0, PLACING_STATE = 1, MANIPULATING_STATE = 2;
         protected enum STATES { SELECTING, PLACING, MANIPULATING };
 
         private STATES state;
@@ -39,15 +38,18 @@ namespace designAR
         private Room room;
         private Item selectedItem;
 
-        Vector3 nearSource;
-        Vector3 farSource;
-        Vector2 screenCenter;
-        Vector2 cursorPosition;
+        protected bool actionDisabled = true;
+
+        protected Vector3 nearSource;
+        protected Vector3 farSource;
+        protected Vector2 screenCenter;
+        protected Vector2 cursorPosition;
 
         private Texture2D selectSprite;
         private Texture2D placeSprite;
         private Texture2D manipulateSprite;
         private Texture2D currentCursor;
+        private Texture2D disabledActionSprite;
 
         public Wand(Scene theScene, GraphicsDevice gDevice, Catalog cat, Room rm)
         {
@@ -363,7 +365,7 @@ namespace designAR
             // Detect key press "a"
             if (keys == Keys.A)
             {
-
+                actionDisabled = !actionDisabled;
             }
         }
 
@@ -371,6 +373,9 @@ namespace designAR
         {
             spriteBatch.Begin();
             spriteBatch.Draw(currentCursor, cursorPosition, Color.White);
+            if(actionDisabled)
+                spriteBatch.Draw(disabledActionSprite, cursorPosition, Color.White);
+
             spriteBatch.End();
         }
 
@@ -388,6 +393,11 @@ namespace designAR
         public void setManipulateCrosshair(Texture2D sprite)
         {
             this.manipulateSprite = sprite;
+        }
+
+        internal void setDisabledCrosshair(Texture2D sprite)
+        {
+            this.disabledActionSprite = sprite;
         }
 
         internal void setTexture(Texture2D sprite)
@@ -413,5 +423,7 @@ namespace designAR
                     break;
             }
         }
+
+       
     }
 }
