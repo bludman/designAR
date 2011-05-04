@@ -574,6 +574,8 @@ namespace designAR
                     Console.WriteLine("Over " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                     return ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name.Equals("Floor");
 
+
+                    /*
                     // We only care about the closest picked object for now, so we'll simply display the name 
                     // of the closest picked object whose container is a geometry node
                     //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
@@ -589,6 +591,8 @@ namespace designAR
 
                     Console.WriteLine("Over " + (tempNode.Name));
                     return catalog.roomContains(tempNode.Name);
+                     * */
+
 
                 }
                 else

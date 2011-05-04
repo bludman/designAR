@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Catalog.cs" />
+    <Compile Include="HUD.cs" />
     <Compile Include="IBindable.cs" />
     <Compile Include="Item.cs">
       <SubType>Code</SubType>
@@ -102,6 +103,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="designAR.cs" />
     <Compile Include="Room.cs" />
+    <Compile Include="TexturedLayer.cs" />
     <Compile Include="Wand.cs" />
   </ItemGroup>
   <ItemGroup>
