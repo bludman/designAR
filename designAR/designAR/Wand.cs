@@ -545,16 +545,24 @@ namespace designAR
 
         internal void Update(GameTime gameTime)
         {
-            validateAction();
+            actionDisabled = validateAction();
+            if (state == STATES.PLACING)
+            {
+                if (isOverCatalogItem())
+                    setTexture(selectSprite);
+                else if (isOverCatalogItem()) //could be snapping item in future
+                    setTexture(selectSprite);
+                else
+                    setTexture(placeSprite);
+            }
         }
 
-        private void validateAction()
+        private bool validateAction()
         {
             switch (state)
             {
                 case STATES.SELECTING:
-                    actionDisabled = !(isOverCatalogItem() || isOverRoomItem());
-                    break;
+                    return !(isOverCatalogItem() || isOverRoomItem());
                 case STATES.PLACING:
 
 
@@ -563,6 +571,8 @@ namespace designAR
 
                     break;
             }
+
+            return false;
         }
     }
 }
