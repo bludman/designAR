@@ -195,7 +195,6 @@ namespace designAR
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
             
             catalog.display(gameTime);
             base.Draw(gameTime);

@@ -28,10 +28,9 @@ namespace designAR
 {
     class Wand
     {
-        private const int IDLE_STATE = 0, PLACING_STATE = 1, MANIPULATING_STATE = 2;
         protected enum STATES { SELECTING, PLACING, MANIPULATING };
-
         private STATES state;
+
         private SpriteBatch spriteBatch;
         private GraphicsDevice graphicsDevice;
         private Scene scene;
@@ -66,12 +65,20 @@ namespace designAR
 
             // Add a mouse click callback function to perform ray picking when mouse is clicked
             MouseInput.Instance.MouseClickEvent += new HandleMouseClick(MouseClickHandler);
+            MouseInput.Instance.MouseWheelMoveEvent += new HandleMouseWheelMove(MouseWheelHandler);
 
             // Add a keyboard press handler for user input
             KeyboardInput.Instance.KeyPressEvent += new HandleKeyPress(KeyPressHandler);
         }
 
-
+        private void MouseWheelHandler(int delta, int value)
+        {
+            if (state == STATES.MANIPULATING)
+            {
+                selectedItem.RotateBy(delta/200f);
+            }
+        }
+        
         private void MouseClickHandler(int button, Point mouseLocation)
         {
             switch (state)
@@ -202,7 +209,7 @@ namespace designAR
             }
             else
             {
-                Console.WriteLine("NOTHING HERE BITCHES");
+                Console.WriteLine("Nothing to select");
             }
         }
 
@@ -252,8 +259,6 @@ namespace designAR
                 }
             }
         }
-
- 
 
 
         private void Manipulate()
