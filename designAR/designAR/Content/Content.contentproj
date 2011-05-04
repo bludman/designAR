@@ -102,6 +102,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="crosshairs\actionDisabled.png">
+      <Name>actionDisabled</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="models\dresser1.fbx">
       <Name>dresser1</Name>
       <Importer>FbxImporter</Importer>

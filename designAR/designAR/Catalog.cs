@@ -141,7 +141,7 @@ namespace designAR
                 for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
                 {
 
-                    item_list[i].UnbindFrom(marker);
+                    item_list[i].Unbind();
 
 
                 }

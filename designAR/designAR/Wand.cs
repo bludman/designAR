@@ -38,15 +38,18 @@ namespace designAR
         private Room room;
         private Item selectedItem;
 
-        Vector3 nearSource;
-        Vector3 farSource;
-        Vector2 screenCenter;
-        Vector2 cursorPosition;
+        protected bool actionDisabled = true;
+
+        protected Vector3 nearSource;
+        protected Vector3 farSource;
+        protected Vector2 screenCenter;
+        protected Vector2 cursorPosition;
 
         private Texture2D selectSprite;
         private Texture2D placeSprite;
         private Texture2D manipulateSprite;
         private Texture2D currentCursor;
+        private Texture2D disabledActionSprite;
 
         public Wand(Scene theScene, GraphicsDevice gDevice, Catalog cat, Room rm)
         {
@@ -147,17 +150,39 @@ namespace designAR
                 // We only care about the closest picked object for now, so we'll simply display the name 
                 // of the closest picked object whose container is a geometry node
                 //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
-                Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                // Getting an new instance of the item
+                GeometryNode tempNode = new GeometryNode();
+                int i = 0;
+                tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
+                while (tempNode.GroupID == room.roomGroupID && i+1 <pickedObjects.Count)
+                {
+                    i++;
+                    tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
+                }
+                
 
-                Console.WriteLine("Duplicating item from " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                selectedItem = catalog.selectItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                
+                // Getting an new instance of the item
+                /*
+                if (tempNode.GroupID!=room.roomGroupID)
+                {
+                    Console.WriteLine("Parent of the selected object: " + tempNode.Parent.Name);
+                    Console.WriteLine("Group id of the object is :" + tempNode.GroupID);
+                    Console.WriteLine(tempNode.Name);
+                    selectedItem = catalog.selectItem(tempNode.Name);
+                    setState(STATES.PLACING);
+                }
+                */
+
+
+                Console.WriteLine("Duplicating item from " + (tempNode.Name));
+                selectedItem = catalog.selectItem(tempNode.Name);
 
                 if (selectedItem != null)
                 {
                     Console.WriteLine("New item is " + selectedItem.Label);
                     setState(STATES.PLACING);
                 }
+
             }
             else
             {
@@ -189,11 +214,43 @@ namespace designAR
                 // We only care about the closest picked object for now, so we'll simply display the name 
                 // of the closest picked object whose container is a geometry node
                 //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
+
+                GeometryNode tempNode = new GeometryNode();
+                int i = 0;
+                tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
+                while (tempNode.GroupID == room.roomGroupID && i + 1 < pickedObjects.Count)
+                {
+                    i++;
+                    tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
+                }
+
+
+
+                /* Getting an new instance of the item
+                if (tempNode.GroupID != room.roomGroupID)
+                {
+                    Console.WriteLine("Parent of the selected object: " + tempNode.Parent.Name);
+                    Console.WriteLine("Group id of the object is :" + tempNode.GroupID);
+                    Console.WriteLine(tempNode.Name);
+                    selectedItem = catalog.selectItem(tempNode.Name);
+                    setState(STATES.PLACING);
+                }
+                */
+                /******* The above code replaces this chunk
+
                 Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 // Getting an new instance of the item
+<<<<<<< HEAD
+               GeometryNode tempNode= (GeometryNode)pickedObjects[0].PickedPhysicsObject.Container;
+               if (tempNode.GroupID != room.roomGroupID)
+               {
+                   selectedItem = catalog.selectPlacedItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                   setState(STATES.MANIPULATING);
+               }*/
 
-                Console.WriteLine("Duplicating item from " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                selectedItem = catalog.selectPlacedItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+
+                Console.WriteLine("Duplicating item from " + tempNode.Name);
+                selectedItem = catalog.selectPlacedItem(tempNode.Name);
 
                 if (selectedItem != null)
                 {
@@ -204,6 +261,7 @@ namespace designAR
                 {
                     Console.WriteLine("No item received");
                 }
+
 
 
             }
@@ -313,7 +371,16 @@ namespace designAR
             // Detect key press "a"
             if (keys == Keys.A)
             {
+                actionDisabled = !actionDisabled;
+            }
 
+            if (keys == Keys.Delete || keys == Keys.Back)
+            {
+                if (state == STATES.MANIPULATING)
+                {
+                    selectedItem.Unbind();
+                    setState(STATES.SELECTING);
+                }
             }
         }
 
@@ -321,6 +388,9 @@ namespace designAR
         {
             spriteBatch.Begin();
             spriteBatch.Draw(currentCursor, cursorPosition, Color.White);
+            if(actionDisabled)
+                spriteBatch.Draw(disabledActionSprite, cursorPosition, Color.White);
+
             spriteBatch.End();
         }
 
@@ -338,6 +408,11 @@ namespace designAR
         public void setManipulateCrosshair(Texture2D sprite)
         {
             this.manipulateSprite = sprite;
+        }
+
+        internal void setDisabledCrosshair(Texture2D sprite)
+        {
+            this.disabledActionSprite = sprite;
         }
 
         internal void setTexture(Texture2D sprite)
@@ -363,5 +438,7 @@ namespace designAR
                     break;
             }
         }
+
+       
     }
 }

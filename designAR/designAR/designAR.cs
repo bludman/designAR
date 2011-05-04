@@ -82,7 +82,7 @@ namespace designAR
             wand.setSelectCrosshair(Content.Load<Texture2D>("crosshairs/crosshairnormal"));
             wand.setPlaceCrosshair(Content.Load<Texture2D>("crosshairs/crosshairplace"));
             wand.setManipulateCrosshair(Content.Load<Texture2D>("crosshairs/crosshairmanip"));
-            //room = new Room();
+            wand.setDisabledCrosshair(Content.Load<Texture2D>("crosshairs/actionDisabled"));
         }
 
         private void ConfigureState()

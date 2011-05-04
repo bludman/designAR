@@ -110,7 +110,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ALVARConfig_14000.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ALVARConfig_longStretch.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
