@@ -42,7 +42,8 @@ namespace designAR
         ItemLibrary library;
         List<Item> item_list;
         Scene my_scene;
-        Dictionary<String, Item> names2items;
+        Dictionary<String, Item> names2itemsInCatalog;
+        Dictionary<String, Item> names2itemsInRoom;
         public Catalog(Scene s)
         {
             this.my_scene = s;
@@ -52,14 +53,15 @@ namespace designAR
             my_scene.RootNode.AddChild(marker);
             my_scene.RootNode.AddChild(changeMarker);
             library = new ItemLibrary("models.txt");
-            names2items = new Dictionary<string, Item>();
+            names2itemsInCatalog = new Dictionary<string, Item>();
+            names2itemsInRoom = new Dictionary<string, Item>();
             item_list = library.getAllItems();
           //  this.objects = l;
             int grid_x = 0;
             int grid_y = 0;
             foreach (Item i in item_list)
             {
-                names2items.Add(i.Label, i);
+                names2itemsInCatalog.Add(i.Label, i);
             }
             for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
             {
@@ -95,7 +97,7 @@ namespace designAR
         public Item selectPlacedItem(String s)
         {
             Item i;
-            bool success = names2items.TryGetValue(s, out i);
+            bool success = names2itemsInRoom.TryGetValue(s, out i);
             if (success)
             {
                 i.Selected = true;
@@ -104,20 +106,29 @@ namespace designAR
             else return null;
         }
 
-        public Item selectItem(String s)
+        public Item selectCatalogItem(String s)
         {
             Item i;
-            bool success = names2items.TryGetValue(s, out i);
+            bool success = names2itemsInCatalog.TryGetValue(s, out i);
             if (success)
             {
                 i.Selected = true;
                 Item newI = new Item(i);
-                names2items.Add(newI.Label, newI);
+                names2itemsInRoom.Add(newI.Label, newI);
                 return newI;
             }
             else return null;
         }
 
+        public bool catalogContains(String s)
+        {
+            return names2itemsInCatalog.ContainsKey(s);
+        }
+
+        public bool roomContains(String s)
+        {
+            return names2itemsInRoom.ContainsKey(s);
+        }
 
         public void display(GameTime gameTime)
         {

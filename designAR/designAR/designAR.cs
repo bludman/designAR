@@ -183,6 +183,7 @@ namespace designAR
                 this.Exit();
 
             // TODO: Add your update logic here
+            wand.Update(gameTime);
            
             base.Update(gameTime);
            
