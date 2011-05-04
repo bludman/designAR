@@ -80,11 +80,13 @@ namespace designAR
             catalog = new Catalog(scene);
             room = new Room(scene, 60, 60);
             room.Initialize();
+
             wand = new Wand(scene, graphics.GraphicsDevice, catalog, room);
             wand.setSelectCrosshair(Content.Load<Texture2D>("crosshairs/crosshairnormal"));
             wand.setPlaceCrosshair(Content.Load<Texture2D>("crosshairs/crosshairplace"));
             wand.setManipulateCrosshair(Content.Load<Texture2D>("crosshairs/crosshairmanip"));
-            wand.setDisabledCrosshair(Content.Load<Texture2D>("crosshairs/actionDisabled"));
+            wand.setInvalidActionCrosshair(Content.Load<Texture2D>("crosshairs/actionDisabled"));
+            wand.setDeleteConfirmationModal(Content.Load<Texture2D>("hud/deleteConfirmationModal"));
             wand.Hud = hud;
         }
 

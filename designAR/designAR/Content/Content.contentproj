@@ -81,13 +81,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="crosshairs\crosshairmanip.png">
-      <Name>crosshairmanip</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="models\table1.fbx">
       <Name>table1</Name>
       <Importer>FbxImporter</Importer>
@@ -125,6 +118,20 @@
   <ItemGroup>
     <Compile Include="hud\cornerPanel.png">
       <Name>cornerPanel</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="hud\deleteConfirmationModal.png">
+      <Name>deleteConfirmationModal</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="crosshairs\crosshairmanip.png">
+      <Name>crosshairmanip</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

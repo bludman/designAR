@@ -40,7 +40,9 @@ namespace designAR
         private Item selectedItemDisplay;
         private float selectedItemRotation = 0;
 
-        protected bool actionDisabled = true;
+        protected bool invalidAction = true;
+        protected bool deleteIsActive = false;
+        protected bool showCursor=true, showModal=false;
 
         protected Vector3 nearSource;
         protected Vector3 farSource;
@@ -51,7 +53,8 @@ namespace designAR
         private Texture2D placeSprite;
         private Texture2D manipulateSprite;
         private Texture2D currentCursor;
-        private Texture2D disabledActionSprite;
+        private Texture2D invalidActionSprite;
+        private Texture2D deleteConfirmationModal;
 
         protected HUD hud;
 
@@ -80,6 +83,9 @@ namespace designAR
 
         private void MouseWheelHandler(int delta, int value)
         {
+            if (showModal)
+                return;
+
             if (actionState == STATES.MANIPULATING)
             {
                 if (isFineRotation)
@@ -99,6 +105,10 @@ namespace designAR
         
         private void MouseClickHandler(int button, Point mouseLocation)
         {
+            if (showModal)
+                return;
+
+
             switch (actionState)
             {
                 case STATES.SELECTING:
@@ -108,7 +118,7 @@ namespace designAR
                     }
                     break;
                 case STATES.PLACING:
-                    if (actionDisabled)
+                    if (invalidAction)
                         break;
 
                     if (button == MouseInput.RightButton)
@@ -383,24 +393,57 @@ namespace designAR
             if (keys == Keys.R)
             {
                 isFineRotation = !isFineRotation;
+                hud.TopLeftText = isFineRotation ? "Rotation: Fine" : "Rotation: Coarse";
             }
             if (keys == Keys.Delete || keys == Keys.Back)
             {
-                if (actionState == STATES.MANIPULATING)
+                if (actionState != STATES.MANIPULATING)
                 {
-                    selectedItem.Unbind();
-                    setState(STATES.SELECTING);
+                    deleteIsActive = false;
+                    return;
                 }
+
+                if (deleteIsActive)
+                {
+                    
+                    if (actionState == STATES.MANIPULATING)
+                    {
+                        selectedItem.Unbind();
+                        setState(STATES.SELECTING);
+                    }
+                    deleteIsActive = false;
+                }
+                else
+                {
+                    deleteIsActive = true;
+                }
+
+
+                showCursor = !deleteIsActive;
+                showModal = deleteIsActive;
+            }
+            if (keys == Keys.Escape)
+            {
+                deleteIsActive = false;
+                showCursor = !deleteIsActive;
+                showModal = deleteIsActive;
             }
         }
 
         public void Draw()
         {
             spriteBatch.Begin();
-            spriteBatch.Draw(currentCursor, cursorPosition, Color.White);
-            if(actionDisabled)
-                spriteBatch.Draw(disabledActionSprite, cursorPosition, Color.White);
 
+            if (showCursor)
+            {
+                spriteBatch.Draw(currentCursor, cursorPosition, Color.White);
+                if (invalidAction)
+                    spriteBatch.Draw(invalidActionSprite, cursorPosition, Color.White);
+            }
+            if (showModal)
+            {
+                spriteBatch.Draw(deleteConfirmationModal, cursorPosition, Color.White);
+            }
             spriteBatch.End();
         }
 
@@ -420,9 +463,14 @@ namespace designAR
             this.manipulateSprite = sprite;
         }
 
-        internal void setDisabledCrosshair(Texture2D sprite)
+        internal void setInvalidActionCrosshair(Texture2D sprite)
         {
-            this.disabledActionSprite = sprite;
+            this.invalidActionSprite = sprite;
+        }
+
+        internal void setDeleteConfirmationModal(Texture2D sprite)
+        {
+            this.deleteConfirmationModal = sprite;
         }
 
         internal void setTexture(Texture2D sprite)
@@ -613,18 +661,18 @@ namespace designAR
 
         internal void Update(GameTime gameTime)
         {
-            actionDisabled = !isValidAction();
+            invalidAction = !isValidAction();
             if (actionState == STATES.PLACING)
             {
                 if (isOverCatalogItem())
                 {
                     setTexture(selectSprite);
-                    actionDisabled = false;
+                    invalidAction = false;
                 }
                 else if (isOverRoomItem()) //could be snapping icon in future
                 {
                     setTexture(selectSprite);
-                    actionDisabled = false;
+                    invalidAction = false;
                 }
                 else
                 {
@@ -637,12 +685,12 @@ namespace designAR
                 if (isOverCatalogItem())
                 {
                     setTexture(selectSprite);
-                    actionDisabled = false;
+                    invalidAction = false;
                 }
                 else if (isOverRoomItem()) //could be snapping icon in future
                 {
                     setTexture(selectSprite);
-                    actionDisabled = false;
+                    invalidAction = false;
                 }
                 else
                 {
@@ -665,21 +713,21 @@ namespace designAR
         {
             
             if (currentCursor == manipulateSprite)
-                if (actionDisabled)
+                if (invalidAction)
                     return "Move cursor to room to manipulate";
                 else
                     return "Left Click: Confirm | Right Click: Move | Scroll Wheel: Rotate";
             else if (currentCursor == placeSprite)
-                if (actionDisabled)
+                if (invalidAction)
                     return "Move cursor to room to place the object";
                 else
                     return "Right Click to place at target location";
             else if (currentCursor == selectSprite)
-                if (actionDisabled)
+                if (invalidAction)
                     return "Click on an object to select it";
                 else
                     return "Left Click to select this item";
-            else if (actionDisabled)
+            else if (invalidAction)
                 return "Invalid position for this action";
             else
                 return "";
