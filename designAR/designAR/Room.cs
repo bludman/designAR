@@ -354,10 +354,12 @@ namespace designAR
             return this.groundMarkerNode;
         }
 
-        internal bool isVisble()
+
+        internal bool isVisible()
         {
             return this.groundMarkerNode.MarkerFound;
         }
+
     }
 
 }
