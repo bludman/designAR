@@ -39,10 +39,10 @@ namespace designAR
 
         
         private Scene scene;
-        public MarkerNode groundMarkerNode, toolbarMarkerNode;
-        private GeometryNode grid1, grid2, grid3, grid4, grid5, grid6, grid7;
-        private TransformNode grid1TransNode, grid2TransNode, grid3TransNode, grid4TransNode, grid5TransNode, grid6TransNode, grid7TransNode;
-        private Material grid1Material;
+        public MarkerNode groundMarkerNode, toolbarMarkerNode,worldInMiniatureMarkerNode;
+        private GeometryNode floor, frontWall, rightWall, grid4, grid5, grid6, grid7;
+        private TransformNode floorTransNode, frontWallTransNode, rightWallTransNode, grid4TransNode, grid5TransNode, grid6TransNode, grid7TransNode;
+        private Material floorMaterial,wallsMaterial;
         private int gridCenterX = 0;
         private int gridCenterY = 0;
         private int gridOffsetX = 40;
@@ -143,110 +143,62 @@ namespace designAR
 
         public void CreateObjects()
         {
-            GeometryNode[] grid = new GeometryNode[10];
-            int i = 0;
-            grid[1] = new GeometryNode("GridBox" + i);
-
-
-            grid1 = new GeometryNode("Floor");//floor
-            grid1.Model = new Box(floorBreadth, floorLength, 1);
-            grid1TransNode = new TransformNode();
-            grid1TransNode.Translation = new Vector3(floorBreadth / 3, -floorLength / 2, 1);      // 0 0
-            grid1.Physics.Collidable = true;
-            grid1.Physics.Pickable = true;
-            grid1.GroupID = roomGroupID;
-            grid1.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
-            grid1.AddToPhysicsEngine = true;
+            
+            floor = new GeometryNode("Floor");//floor
+            floor.Model = new Box(floorBreadth, floorLength, 1);
+            floorTransNode = new TransformNode();
+            floorTransNode.Translation = new Vector3(floorBreadth / 3, -floorLength / 2, 1);      // 0 0
+            floor.Physics.Collidable = true;
+            floor.Physics.Pickable = true;
+            floor.GroupID = roomGroupID;
+            floor.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
+            floor.AddToPhysicsEngine = true;
             //grid1.IsOccluder = true;
 
-            grid1Material = new Material();
+
+            //Material for the room floor
+            floorMaterial = new Material();
             Vector4 alpha = Color.Gray.ToVector4();
             Vector3 tempAlpha = new Vector3(alpha.X, alpha.Y, alpha.Z);
-            grid1Material.Diffuse = new Vector4(tempAlpha, 0.2f);
-            grid1Material.Specular = Color.White.ToVector4();
+            floorMaterial.Diffuse = new Vector4(tempAlpha, 0.2f);
+            floorMaterial.Specular = Color.White.ToVector4();
+            floorMaterial.SpecularPower = 20;
 
-            grid1Material.SpecularPower = 20;
+            floor.Material = floorMaterial;
 
-            grid1.Material = grid1Material;
+            //Material for the walls
+            wallsMaterial = new Material();
+            wallsMaterial.Diffuse = Color.Gray.ToVector4();
+            wallsMaterial.Specular = Color.White.ToVector4();
+            wallsMaterial.SpecularPower = 20;
 
-
-
-            grid2 = new GeometryNode("Front wall");//front wall
-            grid2.Model = new Box(floorBreadth, floorLength, 1);
-            grid2TransNode = new TransformNode();
-            grid2TransNode.Translation = new Vector3(floorBreadth / 3, 0, floorLength/2);  // 1 0
-            grid2TransNode.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90));
-            grid2.Material = grid1Material;
-            grid2.GroupID = roomGroupID;
-            grid2.AddToPhysicsEngine = true;
-            grid2.Physics.Collidable = true;
-            grid2.Physics.Pickable = true;
-            grid2.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
-
-
-
-            grid3 = new GeometryNode("Right wall");//right side wall
-            grid3.Model = new Box(floorBreadth, floorLength, 1);
-            grid3TransNode = new TransformNode();
-            grid3TransNode.Translation = new Vector3(floorBreadth*4.2f/5, -floorLength / 2, floorLength / 2); // -1 0
-            grid3TransNode.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathHelper.ToRadians(90));
-            grid3.Material = grid1Material;
-            grid3.AddToPhysicsEngine = true;
-            grid3.GroupID = roomGroupID;
-            grid3.Physics.Pickable = true;
-            grid3.Physics.Collidable = true;
-            grid3.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
-
-            grid4 = new GeometryNode("Grid Box4");
-            grid4.Model = new Box(30, 30, 1);
-            grid4TransNode = new TransformNode();
-            grid4TransNode.Translation = new Vector3(gridCenterX, gridCenterY + gridOffsetY, 1); //0 1
-            grid4.Material = grid1Material;
-            grid4.AddToPhysicsEngine = true;
-            grid4.Physics.Pickable = true;
-            grid4.Physics.Collidable = true;
-            grid4.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
-
-
-            //change direction of cylinders to get grid
-            grid5 = new GeometryNode("Grid Box5");
-            grid5.Model = new Box(30, 30, 1);
-            grid5TransNode = new TransformNode();
-            //grid5TransNode.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.ToRadians(90));
-            grid5TransNode.Translation = new Vector3(gridCenterX, gridCenterY - gridOffsetY, 1);                        // 0 -1
-            grid5.Material = grid1Material;
-            grid5.AddToPhysicsEngine = true;
-            grid5.Physics.Pickable = true;
-            grid5.Physics.Collidable = true;
-            grid5.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
-
-            grid6 = new GeometryNode("Grid Box6");
-            grid6.Model = new Box(30, 30, 1);
-            grid6TransNode = new TransformNode();
-            //grid6TransNode.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.ToRadians(90));
-            grid6TransNode.Translation = new Vector3(gridCenterX + gridOffsetX, gridCenterY + gridOffsetY, 1);                                    //1 1
-            grid6.Material = grid1Material;
-            grid6.AddToPhysicsEngine = true;
-            grid6.Physics.Pickable = true;
-            grid6.Physics.Collidable = true;
-            grid6.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
-
-
-            grid7 = new GeometryNode("Grid Box7");
-            grid7.Model = new Box(30, 30, 1);
-            grid7TransNode = new TransformNode();
-            //grid7TransNode.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.ToRadians(90));
-            grid7TransNode.Translation = new Vector3(gridCenterX - gridOffsetX, gridCenterY + gridOffsetY, 1);                                      // -1 1
-            grid7.Material = grid1Material;
-            grid7.AddToPhysicsEngine = true;
-            grid7.Physics.Pickable = true;
-            grid7.Physics.Collidable = true;
-            grid7.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
+            frontWall = new GeometryNode("Front wall");//front wall
+            frontWall.Model = new Box(floorBreadth, floorLength, 1);
+            frontWallTransNode = new TransformNode();
+            frontWallTransNode.Translation = new Vector3(floorBreadth / 3, 0, floorLength/2);  // 1 0
+            frontWallTransNode.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90));
+            frontWall.Material = wallsMaterial;
+            frontWall.GroupID = roomGroupID;
+            frontWall.AddToPhysicsEngine = true;
+            frontWall.Physics.Collidable = true;
+            frontWall.Physics.Pickable = true;
+            frontWall.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
 
 
 
+            rightWall = new GeometryNode("Right wall");//right side wall
+            rightWall.Model = new Box(floorBreadth, floorLength, 1);
+            rightWallTransNode = new TransformNode();
+            rightWallTransNode.Translation = new Vector3(floorBreadth*4.2f/5, -floorLength / 2, floorLength / 2); // -1 0
+            rightWallTransNode.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathHelper.ToRadians(90));
+            rightWall.Material = wallsMaterial;
+            rightWall.AddToPhysicsEngine = true;
+            rightWall.GroupID = roomGroupID;
+            rightWall.Physics.Pickable = true;
+            rightWall.Physics.Collidable = true;
+            rightWall.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
 
-            // Create a geometry node with a model of a sphere that will be overlaid on
+          
 
 
             // Create a marker node to track a ground marker array.
@@ -258,7 +210,7 @@ namespace designAR
             //groundMarkerNode.Smoother = new DESSmoother(0.2f, 0.1f, 1, 1);
 #else
             //   groundMarkerNode = new MarkerNode(scene.MarkerTracker, "ALVARGroundArray.xml");
-            groundMarkerNode = new MarkerNode(this.scene.MarkerTracker, "ALVARConfig_14000.txt");
+            groundMarkerNode = new MarkerNode(this.scene.MarkerTracker, "ALVARConfig.txt");
 
 #endif
 
@@ -272,25 +224,25 @@ namespace designAR
 
 
 
-
-            toolbarMarkerNode = new MarkerNode(scene.MarkerTracker, "Toolbar.txt");
-
-
-            scene.RootNode.AddChild(toolbarMarkerNode);
+            //Change the toolbar.txt config file. As of now, toolbar has markers included in the long stretch-alvarConfig.txt
+            worldInMiniatureMarkerNode = new MarkerNode(scene.MarkerTracker, "Toolbar.txt");
 
 
+            scene.RootNode.AddChild(worldInMiniatureMarkerNode);
 
 
 
-            groundMarkerNode.AddChild(grid1TransNode);
-            grid1TransNode.AddChild(grid1);
 
 
-            groundMarkerNode.AddChild(grid2TransNode);
-            grid2TransNode.AddChild(grid2);
+            groundMarkerNode.AddChild(floorTransNode);
+            floorTransNode.AddChild(floor);
 
-            groundMarkerNode.AddChild(grid3TransNode);
-            grid3TransNode.AddChild(grid3);
+
+            groundMarkerNode.AddChild(frontWallTransNode);
+            frontWallTransNode.AddChild(frontWall);
+
+            groundMarkerNode.AddChild(rightWallTransNode);
+            rightWallTransNode.AddChild(rightWall);
             /*
                         groundMarkerNode.AddChild(grid4TransNode);
                         grid4TransNode.AddChild(grid4);
@@ -331,10 +283,21 @@ namespace designAR
         {
             // Allows the game to exit
 
-            if (groundMarkerNode.MarkerFound)
+            if (groundMarkerNode.MarkerFound && worldInMiniatureMarkerNode.MarkerFound)
             {
-                Console.Write("Ground found");
+                frontWall.IsOccluder = false;
+                rightWall.IsOccluder = false;
+                floor.Material = wallsMaterial;
+
             }
+            else if (groundMarkerNode.MarkerFound)
+            {
+                frontWall.IsOccluder = true;
+                frontWall.IsOccluder = true;
+                floor.Material = floorMaterial;
+            }
+            // TODO: Change wall occlusion status depending on whether world in miniature is to be displayed or not. 
+
             // TODO: Add your update logic here
 
             //base.Update(gameTime);
