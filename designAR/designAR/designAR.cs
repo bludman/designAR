@@ -184,6 +184,7 @@ namespace designAR
 
             // TODO: Add your update logic here
             wand.Update(gameTime);
+            room.Update();
            
             base.Update(gameTime);
            

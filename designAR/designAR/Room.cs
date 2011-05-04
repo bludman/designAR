@@ -293,7 +293,7 @@ namespace designAR
             else if (groundMarkerNode.MarkerFound)
             {
                 frontWall.IsOccluder = true;
-                frontWall.IsOccluder = true;
+                rightWall.IsOccluder = true;
                 floor.Material = floorMaterial;
             }
             // TODO: Change wall occlusion status depending on whether world in miniature is to be displayed or not. 
