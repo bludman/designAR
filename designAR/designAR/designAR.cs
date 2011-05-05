@@ -71,13 +71,13 @@ namespace designAR
             
             ConfigureState();
             SetupMarkerTracking();
-            hud = new HUD(scene, Content);
             CreateObjects();
         }
 
         private void CreateObjects()
         {
             catalog = new Catalog(scene);
+            hud = new HUD(scene, Content);
             room = new Room(scene, 60, 60);
             room.Initialize();
             wand = new Wand(scene, graphics.GraphicsDevice, catalog, room);

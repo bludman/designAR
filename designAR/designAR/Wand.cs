@@ -46,6 +46,7 @@ namespace designAR
         protected Vector3 farSource;
         protected Vector2 screenCenter;
         protected Vector2 cursorPosition;
+        protected Vector2 cursorNoNoPosition;
 
         private Texture2D selectSprite;
         private Texture2D placeSprite;
@@ -397,7 +398,7 @@ namespace designAR
             spriteBatch.Begin();
             spriteBatch.Draw(currentCursor, cursorPosition, Color.White);
             if(actionDisabled)
-                spriteBatch.Draw(disabledActionSprite, cursorPosition, Color.White);
+                spriteBatch.Draw(disabledActionSprite, cursorNoNoPosition, Color.White);
 
             spriteBatch.End();
         }
@@ -421,6 +422,7 @@ namespace designAR
         internal void setDisabledCrosshair(Texture2D sprite)
         {
             this.disabledActionSprite = sprite;
+            cursorNoNoPosition = new Vector2(screenCenter.X - disabledActionSprite.Width / 2f, screenCenter.Y - disabledActionSprite.Height / 2f);
         }
 
         internal void setTexture(Texture2D sprite)
@@ -483,7 +485,7 @@ namespace designAR
                     }
 
 
-                    Console.WriteLine("Over item from " + (tempNode.Name));
+                    //Console.WriteLine("Over item from " + (tempNode.Name));
                     return catalog.catalogContains(tempNode.Name);
 
                 }
@@ -534,7 +536,7 @@ namespace designAR
                     }
 
 
-                    Console.WriteLine("Over item from " + (tempNode.Name));
+                    //Console.WriteLine("Over item from " + (tempNode.Name));
                     return catalog.roomContains(tempNode.Name);
 
                 }
@@ -571,7 +573,7 @@ namespace designAR
                     // the order of closest intersected object to farthest intersected object
                     pickedObjects.Sort();
 
-                    Console.WriteLine("Over " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                    //Console.WriteLine("Over " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                     return ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name.Equals("Floor");
 
 
