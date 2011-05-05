@@ -48,6 +48,7 @@ namespace designAR
         protected Vector3 farSource;
         protected Vector2 screenCenter;
         protected Vector2 cursorPosition;
+        protected Vector2 modalPosition;
 
         private Texture2D selectSprite;
         private Texture2D placeSprite;
@@ -442,7 +443,7 @@ namespace designAR
             }
             if (showModal)
             {
-                spriteBatch.Draw(deleteConfirmationModal, cursorPosition, Color.White);
+                spriteBatch.Draw(deleteConfirmationModal, modalPosition, Color.White);
             }
             spriteBatch.End();
         }
@@ -471,6 +472,7 @@ namespace designAR
         internal void setDeleteConfirmationModal(Texture2D sprite)
         {
             this.deleteConfirmationModal = sprite;
+            modalPosition= new Vector2(screenCenter.X - sprite.Width / 2f, screenCenter.Y - sprite.Height / 2f);
         }
 
         internal void setTexture(Texture2D sprite)
@@ -711,8 +713,10 @@ namespace designAR
 
         private string getStatusMessage()
         {
-            
-            if (currentCursor == manipulateSprite)
+
+            if (showModal)
+                return "Press DELETE to remove object, ESC to cancel";
+            else if (currentCursor == manipulateSprite)
                 if (invalidAction)
                     return "Move cursor to room to manipulate";
                 else
