@@ -254,21 +254,31 @@ namespace designAR
 
         public void RotateBy(float degrees)
         {
-            Vector3 rotationAxis;
-            if(restrictedDimension.X == 0)
-            {
-                rotationAxis = Vector3.UnitX;
-            } 
-            else if (restrictedDimension.Z == 0)
-            {
-                rotationAxis = Vector3.UnitY;
-            } 
-            else 
-            {
-                rotationAxis = Vector3.UnitZ;
-            }
+            Vector3 rotationAxis = GetRotationAxis();           
             trans.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90))*Quaternion.CreateFromAxisAngle(rotationAxis, MathHelper.ToRadians(degrees));
             //trans.Scale = new Vector3(f);
+        }
+
+        public void RotateByAdditive(float degrees)
+        {
+            Vector3 rotationAxis = GetRotationAxis();
+            trans.Rotation *= Quaternion.CreateFromAxisAngle(rotationAxis, MathHelper.ToRadians(degrees));
+        }
+
+        public Vector3 GetRotationAxis()
+        {
+            if (restrictedDimension.X == 0)
+            {
+                return Vector3.UnitX;
+            }
+            else if (restrictedDimension.Z == 0)
+            {
+                return Vector3.UnitY;
+            }
+            else
+            {
+                return Vector3.UnitZ;
+            }
         }
 
     }
