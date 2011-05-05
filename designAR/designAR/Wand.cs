@@ -49,6 +49,8 @@ namespace designAR
         protected Vector2 screenCenter;
         protected Vector2 cursorPosition;
         protected Vector2 modalPosition;
+        protected Vector2 cursorNoNoPosition;
+
 
         private Texture2D selectSprite;
         private Texture2D placeSprite;
@@ -231,7 +233,7 @@ namespace designAR
             selectedItemDisplay.BindTo(scene.RootNode);
             selectedItemDisplay.Translation = new Vector3(.475f, -.4f, -1);
             //selectedItemDisplay.Translation = new Vector3(0, .06f, -1);
-            selectedItemDisplay.Scale = new Vector3(0.005f, 0.005f, 0.005f);
+            selectedItemDisplay.Scale = new Vector3(0.01f, 0.01f, 0.01f);
             selectedItemDisplay.SetAlpha(0.55f);
         }
 
@@ -439,7 +441,7 @@ namespace designAR
             {
                 spriteBatch.Draw(currentCursor, cursorPosition, Color.White);
                 if (invalidAction)
-                    spriteBatch.Draw(invalidActionSprite, cursorPosition, Color.White);
+                    spriteBatch.Draw(invalidActionSprite, cursorNoNoPosition, Color.White);
             }
             if (showModal)
             {
@@ -467,6 +469,7 @@ namespace designAR
         internal void setInvalidActionCrosshair(Texture2D sprite)
         {
             this.invalidActionSprite = sprite;
+            cursorNoNoPosition = new Vector2(screenCenter.X - invalidActionSprite.Width / 2f, screenCenter.Y - invalidActionSprite.Height / 2f);
         }
 
         internal void setDeleteConfirmationModal(Texture2D sprite)
@@ -536,7 +539,7 @@ namespace designAR
                     }
 
 
-                    Console.WriteLine("Over item from " + (tempNode.Name));
+                    //Console.WriteLine("Over item from " + (tempNode.Name));
                     return catalog.catalogContains(tempNode.Name);
 
                 }
@@ -587,7 +590,7 @@ namespace designAR
                     }
 
 
-                    Console.WriteLine("Over item from " + (tempNode.Name));
+                    //Console.WriteLine("Over item from " + (tempNode.Name));
                     return catalog.roomContains(tempNode.Name);
 
                 }
@@ -624,7 +627,7 @@ namespace designAR
                     // the order of closest intersected object to farthest intersected object
                     pickedObjects.Sort();
 
-                    Console.WriteLine("Over " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                    //Console.WriteLine("Over " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                     return ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name.Equals("Floor");
 
 
