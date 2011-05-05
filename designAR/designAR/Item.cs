@@ -32,6 +32,7 @@ namespace designAR
         protected TransformNode trans;
         protected bool selected;
         protected Vector3 restrictedDimension;
+        protected float rotationAngle = 0;
         protected static int instance = 0;
        
 
@@ -254,15 +255,29 @@ namespace designAR
 
         public void RotateBy(float degrees)
         {
-            Vector3 rotationAxis = GetRotationAxis();           
-            trans.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90))*Quaternion.CreateFromAxisAngle(rotationAxis, MathHelper.ToRadians(degrees));
+            Vector3 rotationAxis = GetRotationAxis();
+            rotationAngle = degrees;
+            if (rotationAngle > 360)
+                rotationAngle -= 360;
+            if (rotationAngle < 360)
+                rotationAngle += 360;
+            trans.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90)) * Quaternion.CreateFromAxisAngle(rotationAxis, MathHelper.ToRadians(rotationAngle));
             //trans.Scale = new Vector3(f);
         }
 
-        public void RotateByAdditive(float degrees)
+        public void RotateCoarse(int times)
         {
-            Vector3 rotationAxis = GetRotationAxis();
-            trans.Rotation *= Quaternion.CreateFromAxisAngle(rotationAxis, MathHelper.ToRadians(degrees));
+            rotationAngle += times * 15;
+            rotationAngle /= 15;
+            rotationAngle = (float)Math.Round(rotationAngle, 0, MidpointRounding.AwayFromZero);
+            rotationAngle *= 15;
+            RotateBy(rotationAngle);
+        }
+
+        public void RotateFine(int times)
+        {
+            rotationAngle += times;
+            RotateBy(rotationAngle);
         }
 
         public Vector3 GetRotationAxis()

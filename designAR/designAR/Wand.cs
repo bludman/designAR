@@ -94,9 +94,9 @@ namespace designAR
                 if (isFineRotation)
                 {
                     if (delta > 0)
-                        selectedItem.RotateByAdditive(1);
+                        selectedItem.RotateFine(1);
                     else if (delta < 0)
-                        selectedItem.RotateByAdditive(-1);
+                        selectedItem.RotateFine(-1);
                 }
                 else
                 {
@@ -104,9 +104,9 @@ namespace designAR
                     //float rem = degrees % 15;
                     //degrees -= rem;
                     if (delta > 0)
-                        selectedItem.RotateByAdditive(15);
+                        selectedItem.RotateCoarse(1);
                     else if (delta < 0)
-                        selectedItem.RotateByAdditive(-15);
+                        selectedItem.RotateCoarse(-1);
                 }
                 // Notifier.AddMessage("Scrolling delta: "+ delta + "   Value: " + value);
             }
