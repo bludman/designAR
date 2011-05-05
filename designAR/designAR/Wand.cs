@@ -231,7 +231,7 @@ namespace designAR
             selectedItemDisplay.BindTo(scene.RootNode);
             selectedItemDisplay.Translation = new Vector3(.475f, -.4f, -1);
             //selectedItemDisplay.Translation = new Vector3(0, .06f, -1);
-            selectedItemDisplay.Scale = new Vector3(0.005f, 0.005f, 0.005f);
+            selectedItemDisplay.Scale = new Vector3(0.01f, 0.01f, 0.01f);
             selectedItemDisplay.SetAlpha(0.55f);
         }
 
@@ -467,7 +467,7 @@ namespace designAR
         internal void setInvalidActionCrosshair(Texture2D sprite)
         {
             this.invalidActionSprite = sprite;
-            cursorNoNoPosition = new Vector2(screenCenter.X - disabledActionSprite.Width / 2f, screenCenter.Y - disabledActionSprite.Height / 2f);
+            cursorNoNoPosition = new Vector2(screenCenter.X - invalidActionSprite.Width / 2f, screenCenter.Y - invalidActionSprite.Height / 2f);
         }
 
         internal void setDeleteConfirmationModal(Texture2D sprite)
