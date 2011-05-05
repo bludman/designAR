@@ -212,7 +212,7 @@ namespace designAR
                     tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
                 }
 
-                Console.WriteLine("Duplicating item from " + (tempNode.Name));
+                //Console.WriteLine("Duplicating item from " + (tempNode.Name));
                 selectedItem = catalog.selectCatalogItem(tempNode.Name);
 
                 if (tempNode.GroupID != room.roomGroupID)
@@ -220,14 +220,14 @@ namespace designAR
 
                 if (selectedItem != null)
                 {
-                    Console.WriteLine("New item is " + selectedItem.Label);
+                    //Console.WriteLine("New item is " + selectedItem.Label);
                     setState(STATES.PLACING);
                 }
 
             }
             else
             {
-                Console.WriteLine("NOTHING HERE BITCHES");
+                Console.WriteLine("Nothing to pick");
             }
         }
 
@@ -277,12 +277,12 @@ namespace designAR
                 }
 
 
-                Console.WriteLine("Duplicating item from " + tempNode.Name);
+                //Console.WriteLine("Duplicating item from " + tempNode.Name);
                 selectedItem = catalog.selectPlacedItem(tempNode.Name);
 
                 if (selectedItem != null)
                 {
-                    Console.WriteLine("New item is " + selectedItem.Label);
+                    //Console.WriteLine("New item is " + selectedItem.Label);
                     setState(STATES.MANIPULATING);
                 }
                 else
@@ -298,8 +298,6 @@ namespace designAR
 
         private void Place()
         {
-            Console.WriteLine("Placing!");
-            Notifier.AddMessage("Placing!");
 
             // Now convert the near and far source to actual near and far 3D points based on our eye location
             // and view frustum
@@ -323,18 +321,19 @@ namespace designAR
                 // We only care about the closest picked object for now, so we'll simply display the name 
                 // of the closest picked object whose container is a geometry node
                 //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
-                Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                //Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 // Getting an new instance of the item
                 //itemToPlace = catalog.selectItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                Notifier.AddMessage(pickedObjects[0].IntersectParam.ToString() + " " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                
+                //Notifier.AddMessage(pickedObjects[0].IntersectParam.ToString() + " " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
 
                 if (selectedItem != null)
                 {
                     selectedItem.BindTo(room);
                     Vector3 direction = farPoint - nearPoint;
                     Vector3 placement = nearPoint + direction*pickedObjects[0].IntersectParam;
-                    Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
-                    Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
+                    //Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
+                    //Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
                     //placement.Z = 0f;
                     selectedItem.MoveTo(placement);
                     selectedItem.Selected = true;
@@ -347,9 +346,6 @@ namespace designAR
 
         private void Manipulate()
         {
-            Console.WriteLine("Manipulate!");
-            Notifier.AddMessage("Manipulate!");
-
             // Now convert the near and far source to actual near and far 3D points based on our eye location
             // and view frustum
             Vector3 nearPoint = graphicsDevice.Viewport.Unproject(nearSource,
@@ -372,10 +368,10 @@ namespace designAR
                 // We only care about the closest picked object for now, so we'll simply display the name 
                 // of the closest picked object whose container is a geometry node
                 //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
-                Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                //Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 // Getting an new instance of the item
                 //itemToPlace = catalog.selectItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                Notifier.AddMessage(pickedObjects[0].IntersectParam.ToString() + " " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+               // Notifier.AddMessage(pickedObjects[0].IntersectParam.ToString() + " " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
 
                 if (selectedItem != null)
                 {
@@ -383,8 +379,8 @@ namespace designAR
                     Vector3 direction = farPoint - nearPoint;
                     //direction.Normalize();
                     Vector3 placement = nearPoint + direction * pickedObjects[0].IntersectParam;
-                    Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
-                    Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
+                    //Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
+                    //Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
                     //placement.Z = 0f;
                     selectedItem.MoveTo(placement);
                     //setState(STATES.MANIPULATING);
