@@ -628,7 +628,7 @@ namespace designAR
                     // the order of closest intersected object to farthest intersected object
                     pickedObjects.Sort();
 
-                    //Console.WriteLine("Over " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                    Console.WriteLine("Over " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                     return ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name.Equals("Floor");
 
 
