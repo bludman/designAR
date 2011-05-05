@@ -48,6 +48,9 @@ namespace designAR
         protected Vector3 farSource;
         protected Vector2 screenCenter;
         protected Vector2 cursorPosition;
+        protected Vector2 modalPosition;
+        protected Vector2 cursorNoNoPosition;
+
 
         private Texture2D selectSprite;
         private Texture2D placeSprite;
@@ -90,14 +93,20 @@ namespace designAR
             {
                 if (isFineRotation)
                 {
-                    selectedItem.RotateBy(value / 100f);
+                    if (delta > 0)
+                        selectedItem.RotateFine(1);
+                    else if (delta < 0)
+                        selectedItem.RotateFine(-1);
                 }
                 else
                 {
-                    float degrees = value / 10f;
-                    float rem = degrees % 15;
-                    degrees -= rem;
-                    selectedItem.RotateBy(degrees);
+                    //float degrees = value / 10f;
+                    //float rem = degrees % 15;
+                    //degrees -= rem;
+                    if (delta > 0)
+                        selectedItem.RotateCoarse(1);
+                    else if (delta < 0)
+                        selectedItem.RotateCoarse(-1);
                 }
                 // Notifier.AddMessage("Scrolling delta: "+ delta + "   Value: " + value);
             }
@@ -203,7 +212,7 @@ namespace designAR
                     tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
                 }
 
-                Console.WriteLine("Duplicating item from " + (tempNode.Name));
+                //Console.WriteLine("Duplicating item from " + (tempNode.Name));
                 selectedItem = catalog.selectCatalogItem(tempNode.Name);
 
                 if (tempNode.GroupID != room.roomGroupID)
@@ -211,14 +220,14 @@ namespace designAR
 
                 if (selectedItem != null)
                 {
-                    Console.WriteLine("New item is " + selectedItem.Label);
+                    //Console.WriteLine("New item is " + selectedItem.Label);
                     setState(STATES.PLACING);
                 }
 
             }
             else
             {
-                Console.WriteLine("NOTHING HERE BITCHES");
+                Console.WriteLine("Nothing to pick");
             }
         }
 
@@ -230,7 +239,7 @@ namespace designAR
             selectedItemDisplay.BindTo(scene.RootNode);
             selectedItemDisplay.Translation = new Vector3(.475f, -.4f, -1);
             //selectedItemDisplay.Translation = new Vector3(0, .06f, -1);
-            selectedItemDisplay.Scale = new Vector3(0.005f, 0.005f, 0.005f);
+            selectedItemDisplay.Scale = new Vector3(0.01f, 0.01f, 0.01f);
             selectedItemDisplay.SetAlpha(0.55f);
         }
 
@@ -268,12 +277,12 @@ namespace designAR
                 }
 
 
-                Console.WriteLine("Duplicating item from " + tempNode.Name);
+                //Console.WriteLine("Duplicating item from " + tempNode.Name);
                 selectedItem = catalog.selectPlacedItem(tempNode.Name);
 
                 if (selectedItem != null)
                 {
-                    Console.WriteLine("New item is " + selectedItem.Label);
+                    //Console.WriteLine("New item is " + selectedItem.Label);
                     setState(STATES.MANIPULATING);
                 }
                 else
@@ -289,8 +298,6 @@ namespace designAR
 
         private void Place()
         {
-            Console.WriteLine("Placing!");
-            Notifier.AddMessage("Placing!");
 
             // Now convert the near and far source to actual near and far 3D points based on our eye location
             // and view frustum
@@ -314,18 +321,19 @@ namespace designAR
                 // We only care about the closest picked object for now, so we'll simply display the name 
                 // of the closest picked object whose container is a geometry node
                 //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
-                Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                //Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 // Getting an new instance of the item
                 //itemToPlace = catalog.selectItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                Notifier.AddMessage(pickedObjects[0].IntersectParam.ToString() + " " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                
+                //Notifier.AddMessage(pickedObjects[0].IntersectParam.ToString() + " " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
 
                 if (selectedItem != null)
                 {
                     selectedItem.BindTo(room);
                     Vector3 direction = farPoint - nearPoint;
                     Vector3 placement = nearPoint + direction*pickedObjects[0].IntersectParam;
-                    Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
-                    Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
+                    //Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
+                    //Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
                     //placement.Z = 0f;
                     selectedItem.MoveTo(placement);
                     selectedItem.Selected = true;
@@ -338,9 +346,6 @@ namespace designAR
 
         private void Manipulate()
         {
-            Console.WriteLine("Manipulate!");
-            Notifier.AddMessage("Manipulate!");
-
             // Now convert the near and far source to actual near and far 3D points based on our eye location
             // and view frustum
             Vector3 nearPoint = graphicsDevice.Viewport.Unproject(nearSource,
@@ -363,10 +368,10 @@ namespace designAR
                 // We only care about the closest picked object for now, so we'll simply display the name 
                 // of the closest picked object whose container is a geometry node
                 //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
-                Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+                //Console.WriteLine(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                 // Getting an new instance of the item
                 //itemToPlace = catalog.selectItem(((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                Notifier.AddMessage(pickedObjects[0].IntersectParam.ToString() + " " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
+               // Notifier.AddMessage(pickedObjects[0].IntersectParam.ToString() + " " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
 
                 if (selectedItem != null)
                 {
@@ -374,8 +379,8 @@ namespace designAR
                     Vector3 direction = farPoint - nearPoint;
                     //direction.Normalize();
                     Vector3 placement = nearPoint + direction * pickedObjects[0].IntersectParam;
-                    Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
-                    Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
+                    //Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
+                    //Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
                     //placement.Z = 0f;
                     selectedItem.MoveTo(placement);
                     //setState(STATES.MANIPULATING);
@@ -393,7 +398,6 @@ namespace designAR
             if (keys == Keys.R)
             {
                 isFineRotation = !isFineRotation;
-                hud.TopLeftText = isFineRotation ? "Rotation: Fine" : "Rotation: Coarse";
             }
             if (keys == Keys.Delete || keys == Keys.Back)
             {
@@ -438,11 +442,11 @@ namespace designAR
             {
                 spriteBatch.Draw(currentCursor, cursorPosition, Color.White);
                 if (invalidAction)
-                    spriteBatch.Draw(invalidActionSprite, cursorPosition, Color.White);
+                    spriteBatch.Draw(invalidActionSprite, cursorNoNoPosition, Color.White);
             }
             if (showModal)
             {
-                spriteBatch.Draw(deleteConfirmationModal, cursorPosition, Color.White);
+                spriteBatch.Draw(deleteConfirmationModal, modalPosition, Color.White);
             }
             spriteBatch.End();
         }
@@ -466,11 +470,13 @@ namespace designAR
         internal void setInvalidActionCrosshair(Texture2D sprite)
         {
             this.invalidActionSprite = sprite;
+            cursorNoNoPosition = new Vector2(screenCenter.X - invalidActionSprite.Width / 2f, screenCenter.Y - invalidActionSprite.Height / 2f);
         }
 
         internal void setDeleteConfirmationModal(Texture2D sprite)
         {
             this.deleteConfirmationModal = sprite;
+            modalPosition= new Vector2(screenCenter.X - sprite.Width / 2f, screenCenter.Y - sprite.Height / 2f);
         }
 
         internal void setTexture(Texture2D sprite)
@@ -534,7 +540,7 @@ namespace designAR
                     }
 
 
-                    Console.WriteLine("Over item from " + (tempNode.Name));
+                    //Console.WriteLine("Over item from " + (tempNode.Name));
                     return catalog.catalogContains(tempNode.Name);
 
                 }
@@ -585,7 +591,7 @@ namespace designAR
                     }
 
 
-                    Console.WriteLine("Over item from " + (tempNode.Name));
+                    //Console.WriteLine("Over item from " + (tempNode.Name));
                     return catalog.roomContains(tempNode.Name);
 
                 }
@@ -621,9 +627,19 @@ namespace designAR
                     // Since PickedObject can be compared (which means it implements IComparable), we can sort it in 
                     // the order of closest intersected object to farthest intersected object
                     pickedObjects.Sort();
+                    
+                    GeometryNode tempNode = new GeometryNode();
+                    int i = 0;
+                    tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
+                    while (tempNode.GroupID == Catalog.catalogGroupID && i + 1 < pickedObjects.Count)
+                    {
+                        i++;
+                        tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
+                    }
 
-                    Console.WriteLine("Over " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                    return ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name.Equals("Floor");
+
+                    //Console.WriteLine("Over item from " + (tempNode.Name));
+                    return (tempNode.Name.Equals("Floor"));
 
 
                     /*
@@ -695,6 +711,7 @@ namespace designAR
                 else
                 {
                     setTexture(manipulateSprite);
+                    
                 }
             }
 
@@ -707,12 +724,26 @@ namespace designAR
 
 
             hud.StatusMessage = getStatusMessage();
+            hud.TopRightText = getRotationSettingMessage(); 
+        }
+
+        private string getRotationSettingMessage()
+        {
+
+            if (currentCursor != manipulateSprite)
+                return "";
+            else if (isFineRotation)
+                return "Rotation: Fine ";
+            else
+                return "Rotation: Coarse ";
         }
 
         private string getStatusMessage()
         {
-            
-            if (currentCursor == manipulateSprite)
+
+            if (showModal)
+                return "Press DELETE to remove object, ESC to cancel";
+            else if (currentCursor == manipulateSprite)
                 if (invalidAction)
                     return "Move cursor to room to manipulate";
                 else

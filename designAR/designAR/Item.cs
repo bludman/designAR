@@ -32,6 +32,7 @@ namespace designAR
         protected TransformNode trans;
         protected bool selected;
         protected Vector3 restrictedDimension;
+        protected float rotationAngle = 0;
         protected static int instance = 0;
        
 
@@ -71,7 +72,10 @@ namespace designAR
             geo.AddToPhysicsEngine = true;
             trans.Rotation = Quaternion.CreateFromYawPitchRoll((float)Math.PI / 2, 0, (float)Math.PI / 2);
         }
-
+        public void setGroupID(int id)
+        {
+            this.geo.GroupID = id;
+        }
 
 
         public Item(IModel model, string name, Material material) 
@@ -254,20 +258,45 @@ namespace designAR
 
         public void RotateBy(float degrees)
         {
-            Vector3 rotationAxis;
-            if(restrictedDimension.X == 0)
+            Vector3 rotationAxis = GetRotationAxis();
+            rotationAngle = degrees;
+            if (rotationAngle > 360)
+                rotationAngle -= 360;
+            if (rotationAngle < 360)
+                rotationAngle += 360;
+            trans.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90)) * Quaternion.CreateFromAxisAngle(rotationAxis, MathHelper.ToRadians(rotationAngle));
+            //trans.Scale = new Vector3(f);
+        }
+
+        public void RotateCoarse(int times)
+        {
+            rotationAngle += times * 15;
+            rotationAngle /= 15;
+            rotationAngle = (float)Math.Round(rotationAngle, 0, MidpointRounding.AwayFromZero);
+            rotationAngle *= 15;
+            RotateBy(rotationAngle);
+        }
+
+        public void RotateFine(int times)
+        {
+            rotationAngle += times;
+            RotateBy(rotationAngle);
+        }
+
+        public Vector3 GetRotationAxis()
+        {
+            if (restrictedDimension.X == 0)
             {
-                rotationAxis = Vector3.UnitX;
-            } 
+                return Vector3.UnitX;
+            }
             else if (restrictedDimension.Z == 0)
             {
-                rotationAxis = Vector3.UnitY;
-            } 
-            else 
-            {
-                rotationAxis = Vector3.UnitZ;
+                return Vector3.UnitY;
             }
-            trans.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90))*Quaternion.CreateFromAxisAngle(rotationAxis, MathHelper.ToRadians(degrees));
+            else
+            {
+                return Vector3.UnitZ;
+            }
 
         }
 
