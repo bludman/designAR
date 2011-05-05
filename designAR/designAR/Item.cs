@@ -218,15 +218,15 @@ namespace designAR
         {
             trans.Translation = position*restrictedDimension;
 
-            /*
-            Matrix translate= Matrix.CreateTranslation(position*restrictedDimension);
-            Matrix scale= Matrix.CreateScale(trans.Scale);
+            
+           /* Matrix translate= Matrix.CreateTranslation(position*restrictedDimension);
+            Matrix scale= Matrix.CreateScale(new Vector3(2));
             Matrix rotate= Matrix.CreateFromQuaternion(trans.Rotation);
 
 
             trans.WorldTransformation = scale * rotate * translate;
            */
-            trans.Scale = new Vector3(0.5f);
+            trans.Scale = new Vector3(1);
 
 
         }
@@ -247,7 +247,7 @@ namespace designAR
                 rotationAxis = Vector3.UnitZ;
             }
             trans.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90))*Quaternion.CreateFromAxisAngle(rotationAxis, MathHelper.ToRadians(degrees));
-            trans.Scale = new Vector3(0.5f);
+            trans.Scale = new Vector3(1);
         }
 
     }
