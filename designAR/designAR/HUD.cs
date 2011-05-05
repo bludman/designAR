@@ -109,7 +109,7 @@ namespace designAR
             UI2DRenderer.WriteText(
               Vector2.Zero,
               topLeftText,//"  Selected: " + (selected != null ? selected.Name : "Nothing"),//selectedObjectLabel,
-              Color.DarkBlue,
+              Color.White,
               textFont,
               GoblinEnums.HorizontalAlignment.Left,
               GoblinEnums.VerticalAlignment.Top
