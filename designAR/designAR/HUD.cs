@@ -36,13 +36,17 @@ namespace designAR
             G2DPanel statusBar = new G2DPanel();
             statusBar.Bounds = new Rectangle(-10, 570, 642, 170);
             statusBar.Border = GoblinEnums.BorderFactory.LineBorder;
-            statusBar.Transparency = 0.7f;  // Ranges from 0 (fully transparent) to 1 (fully opaque)
+            statusBar.Transparency = 0.5f;  // Ranges from 0 (fully transparent) to 1 (fully opaque)
+            statusBar.BackgroundColor = Color.Black;
+            statusBar.DrawBorder = false;
             scene.UIRenderer.Add2DComponent(statusBar);
 
             G2DPanel topBar = new G2DPanel();
             topBar.Bounds = new Rectangle(-10, -3, 850, 35);
             topBar.Border = GoblinEnums.BorderFactory.LineBorder;
-            topBar.Transparency = 0.7f;  // Ranges from 0 (fully transparent) to 1 (fully opaque)
+            topBar.Transparency = 0.5f;  // Ranges from 0 (fully transparent) to 1 (fully opaque)
+            topBar.BackgroundColor = Color.Black;
+            topBar.DrawBorder = false;
             scene.UIRenderer.Add2DComponent(topBar);
 
             createCorderBackground();
@@ -65,7 +69,7 @@ namespace designAR
             cornerPanelTransformNode.Scale = new Vector3(0.005f, 0.005f, 0.005f);
 
             Material pointerLabelMaterial = new Material();
-            pointerLabelMaterial.Diffuse = Color.Gray.ToVector4(); ;// new Vector4(0, 0.5f, 0, 1);
+            pointerLabelMaterial.Diffuse = Color.White.ToVector4(); ;// new Vector4(0, 0.5f, 0, 1);
            // pointerLabelMaterial.Specular = Color.White.ToVector4();
            // pointerLabelMaterial.SpecularPower = 50;
             pointerLabelMaterial.Texture = Content.Load<Texture2D>("hud/cornerPanel");
@@ -95,7 +99,7 @@ namespace designAR
             UI2DRenderer.WriteText(
                 Vector2.Zero,
                 " " + status,
-                Color.DarkBlue,
+                Color.White,
                 textFont,
                 GoblinEnums.HorizontalAlignment.Left,
                 GoblinEnums.VerticalAlignment.Bottom
