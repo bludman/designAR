@@ -22,7 +22,7 @@ namespace designAR
         Scene scene;
         ContentManager Content;
 
-        protected string status="",topLeftText="";
+        protected string status="",topRightText="";
 
 
         public HUD(Scene scene, Microsoft.Xna.Framework.Content.ContentManager Content)
@@ -104,10 +104,10 @@ namespace designAR
             
             UI2DRenderer.WriteText(
               Vector2.Zero,
-              topLeftText,//"  Selected: " + (selected != null ? selected.Name : "Nothing"),//selectedObjectLabel,
+              topRightText,//"  Selected: " + (selected != null ? selected.Name : "Nothing"),//selectedObjectLabel,
               Color.DarkBlue,
               textFont,
-              GoblinEnums.HorizontalAlignment.Left,
+              GoblinEnums.HorizontalAlignment.Right,
               GoblinEnums.VerticalAlignment.Top
           );
              
@@ -121,10 +121,10 @@ namespace designAR
             set { status = value; }
         }
 
-        public virtual string TopLeftText
+        public virtual string TopRightText
         {
-            get { return topLeftText; }
-            set { topLeftText = value; }
+            get { return topRightText; }
+            set { topRightText = value; }
         }
     }
 }

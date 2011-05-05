@@ -396,7 +396,6 @@ namespace designAR
             if (keys == Keys.R)
             {
                 isFineRotation = !isFineRotation;
-                hud.TopLeftText = isFineRotation ? "Rotation: Fine" : "Rotation: Coarse";
             }
             if (keys == Keys.Delete || keys == Keys.Back)
             {
@@ -700,6 +699,7 @@ namespace designAR
                 else
                 {
                     setTexture(manipulateSprite);
+                    
                 }
             }
 
@@ -712,6 +712,18 @@ namespace designAR
 
 
             hud.StatusMessage = getStatusMessage();
+            hud.TopRightText = getRotationSettingMessage(); 
+        }
+
+        private string getRotationSettingMessage()
+        {
+
+            if (currentCursor != manipulateSprite)
+                return "";
+            else if (isFineRotation)
+                return "Rotation: Fine ";
+            else
+                return "Rotation: Coarse ";
         }
 
         private string getStatusMessage()
