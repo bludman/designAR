@@ -30,15 +30,19 @@ namespace designAR
     {
         protected enum STATES { SELECTING, PLACING, MANIPULATING };
         private STATES actionState;
-
+        private bool isFineRotation = false;
         private SpriteBatch spriteBatch;
         private GraphicsDevice graphicsDevice;
         private Scene scene;
         private Catalog catalog;
         private Room room;
         private Item selectedItem;
+        private Item selectedItemDisplay;
+        private float selectedItemRotation = 0;
 
-        protected bool actionDisabled = true;
+        protected bool invalidAction = true;
+        protected bool deleteIsActive = false;
+        protected bool showCursor=true, showModal=false;
 
         protected Vector3 nearSource;
         protected Vector3 farSource;
@@ -49,7 +53,10 @@ namespace designAR
         private Texture2D placeSprite;
         private Texture2D manipulateSprite;
         private Texture2D currentCursor;
-        private Texture2D disabledActionSprite;
+        private Texture2D invalidActionSprite;
+        private Texture2D deleteConfirmationModal;
+
+        protected HUD hud;
 
         public Wand(Scene theScene, GraphicsDevice gDevice, Catalog cat, Room rm)
         {
@@ -76,14 +83,32 @@ namespace designAR
 
         private void MouseWheelHandler(int delta, int value)
         {
+            if (showModal)
+                return;
+
             if (actionState == STATES.MANIPULATING)
             {
-                selectedItem.RotateBy(delta/200f);
+                if (isFineRotation)
+                {
+                    selectedItem.RotateBy(value / 100f);
+                }
+                else
+                {
+                    float degrees = value / 10f;
+                    float rem = degrees % 15;
+                    degrees -= rem;
+                    selectedItem.RotateBy(degrees);
+                }
+                // Notifier.AddMessage("Scrolling delta: "+ delta + "   Value: " + value);
             }
         }
         
         private void MouseClickHandler(int button, Point mouseLocation)
         {
+            if (showModal)
+                return;
+
+
             switch (actionState)
             {
                 case STATES.SELECTING:
@@ -93,7 +118,7 @@ namespace designAR
                     }
                     break;
                 case STATES.PLACING:
-                    if (actionDisabled)
+                    if (invalidAction)
                         break;
 
                     if (button == MouseInput.RightButton)
@@ -177,24 +202,12 @@ namespace designAR
                     i++;
                     tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
                 }
-                
-
-                
-                // Getting an new instance of the item
-                /*
-                if (tempNode.GroupID!=room.roomGroupID)
-                {
-                    Console.WriteLine("Parent of the selected object: " + tempNode.Parent.Name);
-                    Console.WriteLine("Group id of the object is :" + tempNode.GroupID);
-                    Console.WriteLine(tempNode.Name);
-                    selectedItem = catalog.selectItem(tempNode.Name);
-                    setState(STATES.PLACING);
-                }
-                */
-
 
                 Console.WriteLine("Duplicating item from " + (tempNode.Name));
                 selectedItem = catalog.selectCatalogItem(tempNode.Name);
+
+                if (tempNode.GroupID != room.roomGroupID)
+                    DrawSelectedItem(catalog.cloneCatalogItem(tempNode.Name));
 
                 if (selectedItem != null)
                 {
@@ -209,6 +222,17 @@ namespace designAR
             }
         }
 
+        private void DrawSelectedItem(Item i)
+        {
+            if(selectedItemDisplay != null)
+                selectedItemDisplay.Unbind();
+            selectedItemDisplay = i;
+            selectedItemDisplay.BindTo(scene.RootNode);
+            selectedItemDisplay.Translation = new Vector3(.475f, -.4f, -1);
+            //selectedItemDisplay.Translation = new Vector3(0, .06f, -1);
+            selectedItemDisplay.Scale = new Vector3(0.005f, 0.005f, 0.005f);
+            selectedItemDisplay.SetAlpha(0.55f);
+        }
 
         private void SelectFromRoom()
         {
@@ -256,9 +280,6 @@ namespace designAR
                 {
                     Console.WriteLine("No item received");
                 }
-
-
-
             }
             else
             {
@@ -308,6 +329,7 @@ namespace designAR
                     //placement.Z = 0f;
                     selectedItem.MoveTo(placement);
                     selectedItem.Selected = true;
+                    selectedItemDisplay.Unbind();
                     setState(STATES.MANIPULATING);
                 }
             }
@@ -366,26 +388,62 @@ namespace designAR
             // Detect key press "a"
             if (keys == Keys.A)
             {
-                actionDisabled = !actionDisabled;
-            }
 
+            }
+            if (keys == Keys.R)
+            {
+                isFineRotation = !isFineRotation;
+                hud.TopLeftText = isFineRotation ? "Rotation: Fine" : "Rotation: Coarse";
+            }
             if (keys == Keys.Delete || keys == Keys.Back)
             {
-                if (actionState == STATES.MANIPULATING)
+                if (actionState != STATES.MANIPULATING)
                 {
-                    selectedItem.Unbind();
-                    setState(STATES.SELECTING);
+                    deleteIsActive = false;
+                    return;
                 }
+
+                if (deleteIsActive)
+                {
+                    
+                    if (actionState == STATES.MANIPULATING)
+                    {
+                        selectedItem.Unbind();
+                        setState(STATES.SELECTING);
+                    }
+                    deleteIsActive = false;
+                }
+                else
+                {
+                    deleteIsActive = true;
+                }
+
+
+                showCursor = !deleteIsActive;
+                showModal = deleteIsActive;
+            }
+            if (keys == Keys.Escape)
+            {
+                deleteIsActive = false;
+                showCursor = !deleteIsActive;
+                showModal = deleteIsActive;
             }
         }
 
         public void Draw()
         {
             spriteBatch.Begin();
-            spriteBatch.Draw(currentCursor, cursorPosition, Color.White);
-            if(actionDisabled)
-                spriteBatch.Draw(disabledActionSprite, cursorPosition, Color.White);
 
+            if (showCursor)
+            {
+                spriteBatch.Draw(currentCursor, cursorPosition, Color.White);
+                if (invalidAction)
+                    spriteBatch.Draw(invalidActionSprite, cursorPosition, Color.White);
+            }
+            if (showModal)
+            {
+                spriteBatch.Draw(deleteConfirmationModal, cursorPosition, Color.White);
+            }
             spriteBatch.End();
         }
 
@@ -405,9 +463,14 @@ namespace designAR
             this.manipulateSprite = sprite;
         }
 
-        internal void setDisabledCrosshair(Texture2D sprite)
+        internal void setInvalidActionCrosshair(Texture2D sprite)
         {
-            this.disabledActionSprite = sprite;
+            this.invalidActionSprite = sprite;
+        }
+
+        internal void setDeleteConfirmationModal(Texture2D sprite)
+        {
+            this.deleteConfirmationModal = sprite;
         }
 
         internal void setTexture(Texture2D sprite)
@@ -419,6 +482,7 @@ namespace designAR
         private void setState(STATES s)
         {
             this.actionState = s;
+            hud.StatusMessage = s.ToString();
 
             switch (actionState)
             {
@@ -561,10 +625,12 @@ namespace designAR
                     Console.WriteLine("Over " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
                     return ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name.Equals("Floor");
 
+
+                    /*
                     // We only care about the closest picked object for now, so we'll simply display the name 
                     // of the closest picked object whose container is a geometry node
                     //label = ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name + " is picked";
-                    GeometryNode tempNode = new GeometryNode();
+                     GeometryNode  tempNode = new GeometryNode();
                     int i = 0;
                     tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
                     while (tempNode.GroupID == room.roomGroupID && i + 1 < pickedObjects.Count)
@@ -576,6 +642,8 @@ namespace designAR
 
                     Console.WriteLine("Over " + (tempNode.Name));
                     return catalog.roomContains(tempNode.Name);
+                     * */
+
 
                 }
                 else
@@ -593,18 +661,18 @@ namespace designAR
 
         internal void Update(GameTime gameTime)
         {
-            actionDisabled = !isValidAction();
+            invalidAction = !isValidAction();
             if (actionState == STATES.PLACING)
             {
                 if (isOverCatalogItem())
                 {
                     setTexture(selectSprite);
-                    actionDisabled = false;
+                    invalidAction = false;
                 }
                 else if (isOverRoomItem()) //could be snapping icon in future
                 {
                     setTexture(selectSprite);
-                    actionDisabled = false;
+                    invalidAction = false;
                 }
                 else
                 {
@@ -617,18 +685,52 @@ namespace designAR
                 if (isOverCatalogItem())
                 {
                     setTexture(selectSprite);
-                    actionDisabled = false;
+                    invalidAction = false;
                 }
                 else if (isOverRoomItem()) //could be snapping icon in future
                 {
                     setTexture(selectSprite);
-                    actionDisabled = false;
+                    invalidAction = false;
                 }
                 else
                 {
                     setTexture(manipulateSprite);
                 }
             }
+
+            if (selectedItemDisplay != null)
+                selectedItemDisplay.Rotation = Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), MathHelper.ToRadians(selectedItemRotation));
+
+            selectedItemRotation += gameTime.ElapsedGameTime.Milliseconds/50f;
+            if (selectedItemRotation > 360)
+                selectedItemRotation -= 360;
+
+
+            hud.StatusMessage = getStatusMessage();
+        }
+
+        private string getStatusMessage()
+        {
+            
+            if (currentCursor == manipulateSprite)
+                if (invalidAction)
+                    return "Move cursor to room to manipulate";
+                else
+                    return "Left Click: Confirm | Right Click: Move | Scroll Wheel: Rotate";
+            else if (currentCursor == placeSprite)
+                if (invalidAction)
+                    return "Move cursor to room to place the object";
+                else
+                    return "Right Click to place at target location";
+            else if (currentCursor == selectSprite)
+                if (invalidAction)
+                    return "Click on an object to select it";
+                else
+                    return "Left Click to select this item";
+            else if (invalidAction)
+                return "Invalid position for this action";
+            else
+                return "";
         }
 
         private bool isValidAction()
@@ -644,6 +746,12 @@ namespace designAR
             }
 
             return false;
+        }
+
+        public virtual HUD Hud
+        {
+            //get { return restrictedDimension; }
+            set { hud = value; }
         }
     }
 }

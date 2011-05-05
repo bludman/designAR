@@ -34,9 +34,10 @@ namespace designAR
         protected Scene scene;
         protected GraphicsDeviceManager graphics;
         protected SpriteBatch spriteBatch;
-        private Wand wand;
+        protected Wand wand;
         protected Room room;
-         Catalog catalog;
+        protected HUD hud;
+        protected Catalog catalog;
 
         protected bool useStaticImage;
 
@@ -70,6 +71,7 @@ namespace designAR
             
             ConfigureState();
             SetupMarkerTracking();
+            hud = new HUD(scene, Content);
             CreateObjects();
         }
 
@@ -78,11 +80,14 @@ namespace designAR
             catalog = new Catalog(scene);
             room = new Room(scene, 60, 60);
             room.Initialize();
+
             wand = new Wand(scene, graphics.GraphicsDevice, catalog, room);
             wand.setSelectCrosshair(Content.Load<Texture2D>("crosshairs/crosshairnormal"));
             wand.setPlaceCrosshair(Content.Load<Texture2D>("crosshairs/crosshairplace"));
             wand.setManipulateCrosshair(Content.Load<Texture2D>("crosshairs/crosshairmanip"));
-            wand.setDisabledCrosshair(Content.Load<Texture2D>("crosshairs/actionDisabled"));
+            wand.setInvalidActionCrosshair(Content.Load<Texture2D>("crosshairs/actionDisabled"));
+            wand.setDeleteConfirmationModal(Content.Load<Texture2D>("hud/deleteConfirmationModal"));
+            wand.Hud = hud;
         }
 
         private void ConfigureState()
@@ -185,7 +190,7 @@ namespace designAR
             // TODO: Add your update logic here
             wand.Update(gameTime);
             room.Update();
-           
+            hud.Update(gameTime);
             base.Update(gameTime);
            
         }
@@ -199,6 +204,7 @@ namespace designAR
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
             catalog.display(gameTime);
+            hud.Draw(gameTime);
             base.Draw(gameTime);
             wand.Draw();
             

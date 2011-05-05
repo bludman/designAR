@@ -111,6 +111,21 @@ namespace designAR
 
         public Item selectCatalogItem(String s)
         {
+            Item newI = cloneCatalogItem(s);
+            if (newI != null)
+            {
+                Item i;
+                bool success = names2itemsInCatalog.TryGetValue(s, out i);
+                if (success)
+                {
+                    i.Selected = true;
+                }
+            }
+            return newI;
+        }
+
+        public Item cloneCatalogItem(String s)
+        {
             Item i;
             bool success = names2itemsInCatalog.TryGetValue(s, out i);
             if (success)

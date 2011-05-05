@@ -115,11 +115,32 @@ namespace designAR
 
         }
 
+        public void SetAlpha(float a)
+        {
+            Vector4 tempColor=geo.Material.Diffuse;
+            Vector3 tempVec = new Vector3(tempColor.X, tempColor.Y, tempColor.Z);
+            geo.Material.Diffuse = new Vector4(tempVec, a);
+        }
+
 
         public virtual Vector3 Scale
         {
             get { return trans.Scale; }
             set { trans.Scale = value; }
+        }
+
+
+        public virtual Vector3 Translation
+        {
+            get { return trans.Translation; }
+            set { trans.Translation = value; }
+        }
+
+
+        public virtual Quaternion Rotation
+        {
+            get { return trans.Rotation; }
+            set { trans.Rotation = value; }
         }
 
 
@@ -226,7 +247,7 @@ namespace designAR
 
             trans.WorldTransformation = scale * rotate * translate;
            */
-            trans.Scale = new Vector3(1);
+
 
 
         }
@@ -247,7 +268,7 @@ namespace designAR
                 rotationAxis = Vector3.UnitZ;
             }
             trans.Rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.ToRadians(90))*Quaternion.CreateFromAxisAngle(rotationAxis, MathHelper.ToRadians(degrees));
-            trans.Scale = new Vector3(1);
+
         }
 
     }
