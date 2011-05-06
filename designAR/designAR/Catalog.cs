@@ -74,6 +74,7 @@ namespace designAR
                 }
                 item_list[i].BindTo(marker);
                 item_list[i].MoveTo(new Vector3(grid_x, grid_y, 0));
+                item_list[i].Scale = new Vector3(0.5f, 0.5f, 0.5f);
                 grid_x += 15;
              
             }
@@ -105,6 +106,18 @@ namespace designAR
             {
                 i.Selected = true;
                 return i;
+            }
+            else return null;
+        }
+
+        public Item clonePlacedItem(String s)
+        {
+            Item i;
+            bool success = names2itemsInRoom.TryGetValue(s, out i);
+            if (success)
+            {
+                Item newI = new Item(i);
+                return newI;
             }
             else return null;
         }

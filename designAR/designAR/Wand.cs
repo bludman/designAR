@@ -159,6 +159,8 @@ namespace designAR
                     {
 
                         selectedItem.Selected = false;
+                        if(selectedItemDisplay != null)
+                            selectedItemDisplay.Unbind();
                         selectedItem = null;
                         setState(STATES.SELECTING);
                         if (isOverCatalogItem() || isOverRoomItem())
@@ -239,7 +241,7 @@ namespace designAR
             selectedItemDisplay.BindTo(scene.RootNode);
             selectedItemDisplay.Translation = new Vector3(.475f, -.4f, -1);
             //selectedItemDisplay.Translation = new Vector3(0, .06f, -1);
-            selectedItemDisplay.Scale = new Vector3(0.01f, 0.01f, 0.01f);
+            selectedItemDisplay.Scale = new Vector3(0.005f, 0.005f, 0.005f);
             selectedItemDisplay.SetAlpha(0.55f);
         }
 
@@ -276,9 +278,11 @@ namespace designAR
                     tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
                 }
 
-
                 //Console.WriteLine("Duplicating item from " + tempNode.Name);
                 selectedItem = catalog.selectPlacedItem(tempNode.Name);
+
+                if (tempNode.GroupID != room.roomGroupID)
+                    DrawSelectedItem(catalog.clonePlacedItem(tempNode.Name));
 
                 if (selectedItem != null)
                 {
@@ -337,7 +341,7 @@ namespace designAR
                     //placement.Z = 0f;
                     selectedItem.MoveTo(placement);
                     selectedItem.Selected = true;
-                    selectedItemDisplay.Unbind();
+                    //selectedItemDisplay.Unbind();
                     setState(STATES.MANIPULATING);
                 }
             }
