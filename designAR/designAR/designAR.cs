@@ -97,14 +97,23 @@ namespace designAR
             State.ShowFPS = true;
             State.ShowNotifications = true;
 
-            scene.PreferPerPixelLighting = false;
-            scene.EnableShadowMapping = false;
+            scene.PreferPerPixelLighting = true;
+            scene.EnableShadowMapping = true;
 
             Notifier.Placement = Notifier.NotifierPlacement.TopRight;
             Notifier.Color = Color.Red;
             Notifier.CustomStartLocation = new Vector2(1300, 350);
             Notifier.CustomAppearDirection = new Vector2(0, 20);
             Notifier.FadeOutTime = 2000;
+
+            LightSource lightSource1 = new LightSource();
+            lightSource1.Direction = new Vector3(-1, -2, 0);
+            lightSource1.Diffuse = Color.White.ToVector4();
+            lightSource1.Specular = new Vector4(0.6f, 0.6f, 0.6f, 1);
+            // Create a light node to hold the light sources
+            LightNode lightNode1 = new LightNode();
+            lightNode1.LightSource = lightSource1;
+            scene.RootNode.AddChild(lightNode1);
 
 
             useStaticImage = false;

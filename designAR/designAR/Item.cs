@@ -110,7 +110,7 @@ namespace designAR
         public Item(string[] tokens)
         {
             Model m = (Model)loader.Load("", tokens[NAME]);
-
+            m.CastShadows = true;
             Material defaultMaterial = new Material();
             defaultMaterial.Diffuse = Color.White.ToVector4(); //new Vector4(0, 0.5f, 0, 1);
             defaultMaterial.Specular = Color.White.ToVector4();

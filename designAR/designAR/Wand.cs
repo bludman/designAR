@@ -337,9 +337,9 @@ namespace designAR
                     selectedItem.BindTo(room);
                     Vector3 direction = farPoint - nearPoint;
                     Vector3 placement = nearPoint + direction*pickedObjects[0].IntersectParam;
-                    //Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
+                      //Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
                     //Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
-                    //placement.Z = 0f;
+                    placement.Z = 2f;
                     selectedItem.MoveTo(placement);
                     selectedItem.Selected = true;
                     //selectedItemDisplay.Unbind();
