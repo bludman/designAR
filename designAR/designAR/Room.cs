@@ -145,7 +145,7 @@ namespace designAR
         {
             
             floor = new GeometryNode("Floor");//floor
-            floor.Model = new Box(floorBreadth, floorLength, 1);
+            floor.Model = new Box(floorBreadth, floorLength, 0.01f);
             floorTransNode = new TransformNode();
             floorTransNode.Translation = new Vector3(floorBreadth / 3, -floorLength / 2, 1);      // 0 0
             floor.Physics.Collidable = true;

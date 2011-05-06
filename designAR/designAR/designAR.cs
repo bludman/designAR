@@ -130,7 +130,7 @@ namespace designAR
             if (useStaticImage)
             {
                 captureDevice = new NullCapture();
-                captureDevice.InitVideoCapture(0, FrameRate._30Hz, Resolution._800x600,
+                captureDevice.InitVideoCapture(1, FrameRate._30Hz, Resolution._800x600,
                     ImageFormat.R8G8B8_24, false);
                 ((NullCapture)captureDevice).StaticImageFile = "MarkerImage";
             }
