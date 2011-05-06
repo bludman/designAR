@@ -46,6 +46,9 @@ namespace designAR
 
         public static int NAME = 0;
         public static int SCALE = 1;
+        public static int ROTX = 2;
+        public static int ROTY = 3;
+        public static int ROTZ = 4;
 
 
 
@@ -67,7 +70,7 @@ namespace designAR
             trans.AddChild(geo);
 
             geo.Model = model;
-            geo.Physics.Shape = GoblinXNA.Physics.ShapeType.ConvexHull;
+            geo.Physics.Shape = GoblinXNA.Physics.ShapeType.Box;
             geo.Physics.Pickable = true;
             geo.AddToPhysicsEngine = true;
             trans.Rotation = Quaternion.CreateFromYawPitchRoll((float)Math.PI / 2, 0, (float)Math.PI / 2);
@@ -107,7 +110,7 @@ namespace designAR
         public Item(string[] tokens)
         {
             Model m = (Model)loader.Load("", tokens[NAME]);
-
+            m.CastShadows = true;
             Material defaultMaterial = new Material();
             defaultMaterial.Diffuse = Color.White.ToVector4(); //new Vector4(0, 0.5f, 0, 1);
             defaultMaterial.Specular = Color.White.ToVector4();
@@ -158,6 +161,11 @@ namespace designAR
         {
             get { return instanceNumber; }
             //set { instanceNumber = value; }
+        }
+
+        public virtual float Radius
+        {
+            get { return geo.BoundingVolume.Radius; }
         }
 
         public virtual string Label

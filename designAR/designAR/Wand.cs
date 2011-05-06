@@ -159,6 +159,8 @@ namespace designAR
                     {
 
                         selectedItem.Selected = false;
+                        if(selectedItemDisplay != null)
+                            selectedItemDisplay.Unbind();
                         selectedItem = null;
                         setState(STATES.SELECTING);
                         if (isOverCatalogItem() || isOverRoomItem())
@@ -239,8 +241,9 @@ namespace designAR
             selectedItemDisplay.BindTo(scene.RootNode);
             selectedItemDisplay.Translation = new Vector3(.475f, -.4f, -1);
             //selectedItemDisplay.Translation = new Vector3(0, .06f, -1);
-            selectedItemDisplay.Scale = new Vector3(0.01f, 0.01f, 0.01f);
-            selectedItemDisplay.SetAlpha(0.55f);
+            selectedItemDisplay.Scale = new Vector3(0.1f, 0.1f, 0.1f) / selectedItemDisplay.Radius;
+            //Console.WriteLine(selectedItemDisplay.Radius);
+            selectedItemDisplay.SetAlpha(0.65f);
         }
 
         private void SelectFromRoom()
@@ -276,9 +279,11 @@ namespace designAR
                     tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
                 }
 
-
                 //Console.WriteLine("Duplicating item from " + tempNode.Name);
                 selectedItem = catalog.selectPlacedItem(tempNode.Name);
+
+                if (tempNode.GroupID != room.roomGroupID)
+                    DrawSelectedItem(catalog.clonePlacedItem(tempNode.Name));
 
                 if (selectedItem != null)
                 {
@@ -332,12 +337,12 @@ namespace designAR
                     selectedItem.BindTo(room);
                     Vector3 direction = farPoint - nearPoint;
                     Vector3 placement = nearPoint + direction*pickedObjects[0].IntersectParam;
-                    //Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
+                      //Notifier.AddMessage(placement.X + " " + placement.Y + " " + placement.Z);
                     //Console.WriteLine(placement.X + " " + placement.Y + " " + placement.Z);
-                    //placement.Z = 0f;
+                    placement.Z = 2f;
                     selectedItem.MoveTo(placement);
                     selectedItem.Selected = true;
-                    selectedItemDisplay.Unbind();
+                    //selectedItemDisplay.Unbind();
                     setState(STATES.MANIPULATING);
                 }
             }
@@ -589,10 +594,8 @@ namespace designAR
                         i++;
                         tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
                     }
-
-
                     //Console.WriteLine("Over item from " + (tempNode.Name));
-                    return catalog.roomContains(tempNode.Name);
+                    return catalog.roomContains(tempNode.Name) && !catalog.isItemSelectedRoom(tempNode.Name);
 
                 }
                 else

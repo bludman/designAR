@@ -145,9 +145,10 @@ namespace designAR
         {
             
             floor = new GeometryNode("Floor");//floor
-            floor.Model = new Box(floorBreadth, floorLength, 1);
+            floor.Model = new Box(floorBreadth, floorLength, 0.0001f);
+            floor.Model.ReceiveShadows = true;
             floorTransNode = new TransformNode();
-            floorTransNode.Translation = new Vector3(floorBreadth / 3, -floorLength / 2, 1);      // 0 0
+            floorTransNode.Translation = new Vector3(floorBreadth / 3, -floorLength / 2, 0);      // 0 0
             floor.Physics.Collidable = true;
             floor.Physics.Pickable = true;
             floor.GroupID = roomGroupID;
