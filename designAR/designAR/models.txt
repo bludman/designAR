@@ -1,9 +1,9 @@
 #modelname,scale,yaw,pitch,roll
 models\table1,1,0,0,0
 models\table2,1,0,0,0
-models\table3,1,0,0
-models\table4,1,0,0
-models\dresser1,1,0,0
-models\dresser2,1,0,0
+models\table3,1,0,0,0
+models\table4,1,0,0,0
+models\dresser1,1,0,0,0
+models\dresser2,1,0,0,0
 models\chair1,1,0,0,0
-models\bed1,1,0,0
+models\bed1,1,0,0,0

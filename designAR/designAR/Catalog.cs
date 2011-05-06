@@ -38,9 +38,9 @@ namespace designAR
        // List<TransformNode> objects;
         public static int catalogGroupID = 2;
         int changeTime;
-        int num_displayed = 2;
+        int num_displayed = 4;
         int cur_start = 0;
-        int cur_end = 2;
+        int cur_end = 4;
         float cur_angle = 0;
         ItemLibrary library;
         List<Item> item_list;
@@ -206,7 +206,7 @@ namespace designAR
                     if (grid_x > 15)
                     {
                         grid_x = 0;
-                        grid_y -= 10;
+                        grid_y -= 15;
                     }
                     //item_list[i].Selected = true;
                     item_list[i].BindTo(marker);
