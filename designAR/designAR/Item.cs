@@ -280,7 +280,7 @@ namespace designAR
             RotateBy(rotationAngle);
         }
 
-        public Vector3 GetRotationAxis()
+        public Vector3  GetRotationAxis()
         {
             if (restrictedDimension.X == 0)
             {

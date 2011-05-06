@@ -33,12 +33,13 @@ namespace designAR
     {
 
         private const bool SPIN = false;
+        private bool just_changed = false;
         private MarkerNode marker, changeMarker;
        // List<TransformNode> objects;
         int changeTime;
-        int num_displayed = 9;
+        int num_displayed = 2;
         int cur_start = 0;
-        int cur_end = 9;
+        int cur_end = 2;
         float cur_angle = 0;
         ItemLibrary library;
         List<Item> item_list;
@@ -118,7 +119,7 @@ namespace designAR
                 bool success = names2itemsInCatalog.TryGetValue(s, out i);
                 if (success)
                 {
-                    i.Selected = true;
+                    i.Selected = true; 
                 }
             }
             return newI;
@@ -162,16 +163,16 @@ namespace designAR
                 else cur_angle += 0.02f * (float)gameTime.ElapsedGameTime.Milliseconds;
 
             }
-            if (changeMarker.MarkerFound && (gameTime.TotalGameTime.Seconds - changeTime) > 2)
+            if (changeMarker.MarkerFound && !just_changed)
             {
-
+                just_changed = true;
                 for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
                 {
                     item_list[i].Unbind();
                 }
 
                 changeTime = gameTime.TotalGameTime.Seconds;
-                if (cur_end > item_list.Count)
+                if (cur_end >= item_list.Count-1)
                 {
                     cur_end = num_displayed;
                     cur_start = 0;
@@ -185,21 +186,23 @@ namespace designAR
                 int grid_y = 0;
                 for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
                 {
-                    grid_x += 10;
+                    
 
-                    if (grid_x > 30)
+                    if (grid_x > 15)
                     {
                         grid_x = 0;
                         grid_y -= 10;
                     }
-                    item_list[i].Selected = true;
+                    //item_list[i].Selected = true;
                     item_list[i].BindTo(marker);
-                    item_list[i].MoveTo( new Vector3(grid_x, grid_y, 0));  
+                    item_list[i].MoveTo( new Vector3(grid_x, grid_y, 0));
+                    grid_x += 15;
 
                 }
 
 
             }
+            if (!changeMarker.MarkerFound) just_changed = false; 
         }
 
 
