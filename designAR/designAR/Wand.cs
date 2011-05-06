@@ -594,10 +594,8 @@ namespace designAR
                         i++;
                         tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
                     }
-
-
                     //Console.WriteLine("Over item from " + (tempNode.Name));
-                    return catalog.roomContains(tempNode.Name);
+                    return catalog.roomContains(tempNode.Name) && !catalog.isItemSelectedRoom(tempNode.Name);
 
                 }
                 else

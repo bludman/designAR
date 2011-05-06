@@ -155,6 +155,17 @@ namespace designAR
             else return null;
         }
 
+        public bool isItemSelectedRoom(String s)
+        {
+            Item i;
+            bool success = names2itemsInRoom.TryGetValue(s, out i);
+            if (success)
+            {
+                return i.Selected;
+            }
+            return false;
+        }
+
         public bool catalogContains(String s)
         {
             return names2itemsInCatalog.ContainsKey(s);
