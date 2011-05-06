@@ -627,9 +627,19 @@ namespace designAR
                     // Since PickedObject can be compared (which means it implements IComparable), we can sort it in 
                     // the order of closest intersected object to farthest intersected object
                     pickedObjects.Sort();
+                    
+                    GeometryNode tempNode = new GeometryNode();
+                    int i = 0;
+                    tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
+                    while (tempNode.GroupID == Catalog.catalogGroupID && i + 1 < pickedObjects.Count)
+                    {
+                        i++;
+                        tempNode = (GeometryNode)pickedObjects[i].PickedPhysicsObject.Container;
+                    }
 
-                    Console.WriteLine("Over " + ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name);
-                    return ((GeometryNode)pickedObjects[0].PickedPhysicsObject.Container).Name.Equals("Floor");
+
+                    //Console.WriteLine("Over item from " + (tempNode.Name));
+                    return (tempNode.Name.Equals("Floor"));
 
 
                     /*

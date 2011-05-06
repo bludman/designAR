@@ -40,8 +40,8 @@ namespace designAR
         
         private Scene scene;
         public MarkerNode groundMarkerNode, toolbarMarkerNode,worldInMiniatureMarkerNode;
-        private GeometryNode floor, frontWall, rightWall, grid4, grid5, grid6, grid7;
-        private TransformNode floorTransNode, frontWallTransNode, rightWallTransNode, grid4TransNode, grid5TransNode, grid6TransNode, grid7TransNode;
+        private GeometryNode floor, frontWall, rightWall;
+        private TransformNode floorTransNode, frontWallTransNode, rightWallTransNode;
         private Material floorMaterial,wallsMaterial;
         private int gridCenterX = 0;
         private int gridCenterY = 0;
@@ -50,7 +50,7 @@ namespace designAR
         private int floorLength, floorBreadth;
         public Dictionary<String, Item> objectsInRoom;
         public int roomGroupID = 1;
-
+       
 
         Random random = new Random(); // Random number generator. Required for particle effects
 

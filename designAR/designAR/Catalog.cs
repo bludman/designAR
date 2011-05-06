@@ -36,6 +36,7 @@ namespace designAR
         private bool just_changed = false;
         private MarkerNode marker, changeMarker;
        // List<TransformNode> objects;
+        public static int catalogGroupID = 2;
         int changeTime;
         int num_displayed = 2;
         int cur_start = 0;
@@ -64,6 +65,7 @@ namespace designAR
             foreach (Item i in item_list)
             {
                 names2itemsInCatalog.Add(i.Label, i);
+                i.setGroupID(catalogGroupID);
             }
             for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
             {
