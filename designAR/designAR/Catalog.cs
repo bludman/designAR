@@ -38,9 +38,9 @@ namespace designAR
        // List<TransformNode> objects;
         public static int catalogGroupID = 2;
         int changeTime;
-        int num_displayed = 2;
+        int num_displayed = 4;
         int cur_start = 0;
-        int cur_end = 2;
+        int cur_end = 4;
         float cur_angle = 0;
         ItemLibrary library;
         List<Item> item_list;
@@ -66,6 +66,8 @@ namespace designAR
             {
                 names2itemsInCatalog.Add(i.Label, i);
                 i.setGroupID(catalogGroupID);
+                i.Scale = new Vector3(9.0f, 9.0f, 9.0f) / i.Radius;
+
             }
             for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
             {
@@ -108,6 +110,18 @@ namespace designAR
             {
                 i.Selected = true;
                 return i;
+            }
+            else return null;
+        }
+
+        public Item clonePlacedItem(String s)
+        {
+            Item i;
+            bool success = names2itemsInRoom.TryGetValue(s, out i);
+            if (success)
+            {
+                Item newI = new Item(i);
+                return newI;
             }
             else return null;
         }
@@ -193,11 +207,11 @@ namespace designAR
                     if (grid_x > 15)
                     {
                         grid_x = 0;
-                        grid_y -= 10;
+                        grid_y -= 15;
                     }
                     //item_list[i].Selected = true;
                     item_list[i].BindTo(marker);
-                    item_list[i].MoveTo( new Vector3(grid_x, grid_y, 0));
+                    item_list[i].MoveTo(new Vector3(grid_x, grid_y, 0));
                     grid_x += 15;
 
                 }
