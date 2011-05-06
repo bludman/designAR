@@ -225,7 +225,7 @@ namespace designAR
 
 
             //Change the toolbar.txt config file. As of now, toolbar has markers included in the long stretch-alvarConfig.txt
-            worldInMiniatureMarkerNode = new MarkerNode(scene.MarkerTracker, "Toolbar.txt");
+            worldInMiniatureMarkerNode = new MarkerNode(scene.MarkerTracker, "ALVARConfig32_33.txt");
 
 
             scene.RootNode.AddChild(worldInMiniatureMarkerNode);
@@ -243,21 +243,7 @@ namespace designAR
 
             groundMarkerNode.AddChild(rightWallTransNode);
             rightWallTransNode.AddChild(rightWall);
-            /*
-                        groundMarkerNode.AddChild(grid4TransNode);
-                        grid4TransNode.AddChild(grid4);
-
-
-                        groundMarkerNode.AddChild(grid5TransNode);
-                        grid5TransNode.AddChild(grid5);
-
-
-                        groundMarkerNode.AddChild(grid6TransNode);
-                        grid6TransNode.AddChild(grid6);
-
-                        groundMarkerNode.AddChild(grid7TransNode);
-                        grid7TransNode.AddChild(grid7);
-                */
+            
 
 
         }

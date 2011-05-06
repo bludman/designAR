@@ -78,7 +78,7 @@ namespace designAR
         {
             catalog = new Catalog(scene);
             hud = new HUD(scene, Content);
-            room = new Room(scene, 60, 60);
+            room = new Room(scene, 200, 200);
             room.Initialize();
 
             wand = new Wand(scene, graphics.GraphicsDevice, catalog, room);
