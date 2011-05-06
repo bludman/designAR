@@ -72,7 +72,10 @@ namespace designAR
             geo.AddToPhysicsEngine = true;
             trans.Rotation = Quaternion.CreateFromYawPitchRoll((float)Math.PI / 2, 0, (float)Math.PI / 2);
         }
-
+        public void setGroupID(int id)
+        {
+            this.geo.GroupID = id;
+        }
 
 
         public Item(IModel model, string name, Material material) 
@@ -240,15 +243,15 @@ namespace designAR
         {
             trans.Translation = position*restrictedDimension;
 
-            /*
-            Matrix translate= Matrix.CreateTranslation(position*restrictedDimension);
-            Matrix scale= Matrix.CreateScale(trans.Scale);
+            
+           /* Matrix translate= Matrix.CreateTranslation(position*restrictedDimension);
+            Matrix scale= Matrix.CreateScale(new Vector3(2));
             Matrix rotate= Matrix.CreateFromQuaternion(trans.Rotation);
 
 
             trans.WorldTransformation = scale * rotate * translate;
            */
-            //trans.Scale = new Vector3(0.5f);
+
 
 
         }
@@ -280,7 +283,7 @@ namespace designAR
             RotateBy(rotationAngle);
         }
 
-        public Vector3 GetRotationAxis()
+        public Vector3  GetRotationAxis()
         {
             if (restrictedDimension.X == 0)
             {
@@ -294,6 +297,7 @@ namespace designAR
             {
                 return Vector3.UnitZ;
             }
+
         }
 
     }

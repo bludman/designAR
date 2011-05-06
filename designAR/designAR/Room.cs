@@ -40,8 +40,8 @@ namespace designAR
         
         private Scene scene;
         public MarkerNode groundMarkerNode, toolbarMarkerNode,worldInMiniatureMarkerNode;
-        private GeometryNode floor, frontWall, rightWall, grid4, grid5, grid6, grid7;
-        private TransformNode floorTransNode, frontWallTransNode, rightWallTransNode, grid4TransNode, grid5TransNode, grid6TransNode, grid7TransNode;
+        private GeometryNode floor, frontWall, rightWall;
+        private TransformNode floorTransNode, frontWallTransNode, rightWallTransNode;
         private Material floorMaterial,wallsMaterial;
         private int gridCenterX = 0;
         private int gridCenterY = 0;
@@ -50,7 +50,7 @@ namespace designAR
         private int floorLength, floorBreadth;
         public Dictionary<String, Item> objectsInRoom;
         public int roomGroupID = 1;
-
+       
 
         Random random = new Random(); // Random number generator. Required for particle effects
 
@@ -225,7 +225,7 @@ namespace designAR
 
 
             //Change the toolbar.txt config file. As of now, toolbar has markers included in the long stretch-alvarConfig.txt
-            worldInMiniatureMarkerNode = new MarkerNode(scene.MarkerTracker, "Toolbar.txt");
+            worldInMiniatureMarkerNode = new MarkerNode(scene.MarkerTracker, "ALVARConfig32_33.txt");
 
 
             scene.RootNode.AddChild(worldInMiniatureMarkerNode);
@@ -243,21 +243,7 @@ namespace designAR
 
             groundMarkerNode.AddChild(rightWallTransNode);
             rightWallTransNode.AddChild(rightWall);
-            /*
-                        groundMarkerNode.AddChild(grid4TransNode);
-                        grid4TransNode.AddChild(grid4);
-
-
-                        groundMarkerNode.AddChild(grid5TransNode);
-                        grid5TransNode.AddChild(grid5);
-
-
-                        groundMarkerNode.AddChild(grid6TransNode);
-                        grid6TransNode.AddChild(grid6);
-
-                        groundMarkerNode.AddChild(grid7TransNode);
-                        grid7TransNode.AddChild(grid7);
-                */
+            
 
 
         }
