@@ -1,2 +1,21 @@
-testing 123 as
-Daniel: works bitches!erhh
+DesignAR
+Team:
+Sam Friedman - snf2108
+Daniel Lasry - del2119
+Benjamin Ludman - bsl2106
+Anuj Sampathkumaran - as4046
+
+Full source tree included, or clone the repo from github git@github.com:bludman/designAR.git
+Compiled on Windows 7, 32 bit
+
+palette_picture.png is the palette marker
+palette_turner.png is the page turner for the palette
+ALVARArray.png is the ground array and world in miniature array - print one in full scale and one scaled down
+
+QUicktime should play the movie.
+
+All models taken from free models on turbosquid.com
+
+See written report or presentation for list of known limitations.
+
+Goblin doesn't handle scaling consistently. Alos, when a marker isn't in view, the objects attached to it get placed at 0,0 of the other marker in view.
