@@ -241,8 +241,9 @@ namespace designAR
             selectedItemDisplay.BindTo(scene.RootNode);
             selectedItemDisplay.Translation = new Vector3(.475f, -.4f, -1);
             //selectedItemDisplay.Translation = new Vector3(0, .06f, -1);
-            selectedItemDisplay.Scale = new Vector3(0.005f, 0.005f, 0.005f);
-            selectedItemDisplay.SetAlpha(0.55f);
+            selectedItemDisplay.Scale = new Vector3(0.1f, 0.1f, 0.1f) / selectedItemDisplay.Radius;
+            //Console.WriteLine(selectedItemDisplay.Radius);
+            selectedItemDisplay.SetAlpha(0.65f);
         }
 
         private void SelectFromRoom()

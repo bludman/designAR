@@ -66,6 +66,8 @@ namespace designAR
             {
                 names2itemsInCatalog.Add(i.Label, i);
                 i.setGroupID(catalogGroupID);
+                i.Scale = new Vector3(9.0f, 9.0f, 9.0f) / i.Radius;
+
             }
             for (int i = cur_start; i < cur_end && i < item_list.Count; i++)
             {
@@ -77,7 +79,6 @@ namespace designAR
                 }
                 item_list[i].BindTo(marker);
                 item_list[i].MoveTo(new Vector3(grid_x, grid_y, 0));
-                item_list[i].Scale = new Vector3(0.5f, 0.5f, 0.5f);
                 grid_x += 15;
              
             }
@@ -210,7 +211,7 @@ namespace designAR
                     }
                     //item_list[i].Selected = true;
                     item_list[i].BindTo(marker);
-                    item_list[i].MoveTo( new Vector3(grid_x, grid_y, 0));
+                    item_list[i].MoveTo(new Vector3(grid_x, grid_y, 0));
                     grid_x += 15;
 
                 }
