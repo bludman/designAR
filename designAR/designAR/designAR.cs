@@ -152,7 +152,7 @@ namespace designAR
                 // on the device driver.  The values set here will work for a Microsoft VX 6000, 
                 // and many other webcams.
                 captureDevice = new DirectShowCapture2();
-                captureDevice.InitVideoCapture(0, FrameRate._30Hz, Resolution._640x480,
+                  captureDevice.InitVideoCapture(0, FrameRate._30Hz, Resolution._640x480,
                     ImageFormat.R8G8B8_24, false);
             }
 
